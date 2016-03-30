@@ -1,0 +1,18 @@
+{
+  "name": "pivocram",
+  "description": "Scrum Story Board for Pivotal Tracker",
+  "version": "0.0.1",
+  "homepage": "https://github.com/maethorin/pivocram",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "angular": "~1.4.0",
+    "angular-route": "~1.4.0",
+    "angular-resource": "~1.4.0",
+    "angular-loader": "~1.4.0",
+    "angular-mocks": "~1.4.0",
+    "bootstrap-sass": "~>3.3.6",
+    "fontawesome": "~4.5.0",
+    "moment": null
+  }
+}

@@ -1,0 +1,3 @@
+https://github.com/heroku/heroku-buildpack-ruby.git
+https://github.com/Maethorin/heroku-buildpack-nodejs-grunt-bower.git
+https://github.com/heroku/heroku-buildpack-python.git

@@ -1,0 +1,27 @@
+{
+  "name": "pivocram",
+  "private": false,
+  "version": "0.0.1",
+  "description": "Pivotal Tracker Scrum Board",
+  "repository": "https://github.com/maethorin/pivocram",
+  "license": "MIT",
+  "dependencies": {
+    "bower": "^1.7.6",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-compass": "^1.1.1",
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.0",
+    "grunt-contrib-watch": "^0.6.1"
+  },
+  "scripts": {
+    "start": "http-server ./app -a localhost -p 8000 -c-1"
+  },
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-jasmine": "^0.3.8",
+    "karma-ng-html2js-preprocessor": "^0.2.1"
+  }
+}
