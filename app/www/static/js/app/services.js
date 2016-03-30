@@ -1,38 +1,19 @@
 'use strict';
 angular.module('pivocram.services', [])
-    .service('Authentic', [function() {
-        this.token = null;
-        this.userId = null;
-        this.update = function(token, userId) {
-            if (token) {
-                localStorage.setItem('XSRF-TOKEN', token);
-            }
-            if (userId) {
-                localStorage.setItem('USER-ID', userId);
-            }
-            this.token = localStorage.getItem('XSRF-TOKEN');
-            this.userId = localStorage.getItem('USER-ID');
-        };
-        this.isLogged = function() {
-            return this.token != 'undefined' && this.token != null;
-        };
-        this.clean = function() {
-            localStorage.removeItem('XSRF-TOKEN');
-            localStorage.removeItem('USER-ID');
-            this.update();
-        };
+    .factory('Project', ['$resource', 'appConfig', function($resource, appConfig) {
+        return $resource('{0}/api/projects/:projectId'.format([appConfig.backendURL]));
     }])
-    .factory('Story', ['$resource', function($resource) {
+    .factory('Story', ['$resource', 'appConfig', function($resource, appConfig) {
         return $resource(
-            '{0}/api/project/:projectId/stories/:storyId'.format([urlBackEnd]),
+            '{0}/api/projects/:projectId/stories/:storyId'.format([appConfig.backendURL]),
              null,
             {'update': {method: 'PUT'}}
         );
     }])
-    .factory('StoryTask', ['$resource', function($resource) {
+    .factory('StoryTask', ['$resource', 'appConfig', function($resource, appConfig) {
         return $resource(
-            '{0}/api/project/:projectId/stories/:storyId/tasks/:taskId'.format([urlBackEnd]),
+            '{0}/api/projects/:projectId/stories/:storyId/tasks/:taskId'.format([appConfig.backendURL]),
              null,
-            {'update': {method: 'PUT'}} 
+            {'update': {method: 'PUT'}}
         );
     }]);
