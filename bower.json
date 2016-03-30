@@ -12,7 +12,6 @@
     "angular-loader": "~1.4.0",
     "angular-mocks": "~1.4.0",
     "bootstrap-sass": "~>3.3.6",
-    "fontawesome": "~4.5.0",
-    "moment": null
+    "fontawesome": "~4.5.0"
   }
 }

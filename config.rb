@@ -3,10 +3,10 @@
 
 # Set this to the root of your project when deployed:
 http_path = "/"
-css_dir = "app/static/css"
+css_dir = "app/www/static/css"
 sass_dir = "sass"
-images_dir = "app/static/img"
-javascripts_dir = "app/static/js"
+images_dir = "app/www/static/img"
+javascripts_dir = "app/www/static/js"
 additional_import_paths = "bower_components"
 
 # You can select your preferred output style here (can be overridden via the command line):
