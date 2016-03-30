@@ -11,3 +11,7 @@ coverage.xml
 .idea/
 bower_components/
 node_modules/
+
+app/www/static/css/
+app/www/static/js/app*.js
+app/www/static/js/components*.js
