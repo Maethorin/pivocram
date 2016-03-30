@@ -11,6 +11,7 @@ coverage.xml
 .idea/
 bower_components/
 node_modules/
+.sass-cache/
 
 app/www/static/css/
 app/www/static/js/app*.js
