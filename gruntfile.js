@@ -10,6 +10,7 @@ module.exports = function(grunt) {
                     "bower_components/angular/angular.js",
                     "bower_components/angular-route/angular-route.js",
                     "bower_components/angular-resource/angular-resource.js",
+                    "bower_components/jquery/dist/jquery.js",
                     "bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"
                 ],
                 dest: 'app/www/static/js/components.js'
@@ -58,5 +59,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.registerTask('default', ['concat', 'uglify', 'watch', 'compass']);
-    grunt.registerTask('heroku', ['concat:app', 'uglify:app', 'concat:componentes', 'uglify:componentes', 'compass:app']);
+    grunt.registerTask('heroku', ['concat:app', 'uglify:app', 'concat:components', 'uglify:components', 'compass:app']);
 };

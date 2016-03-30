@@ -87,5 +87,5 @@ angular.module(
     }])
     .run(['$rootScope', 'Authentic', function($rootScope, Authentic) {
         baseRun($rootScope, Authentic);
-        $rootScope.atletaLogado = Authentic.estaLogado();
+        $rootScope.userLogged = Authentic.isLogged();
     }]);
