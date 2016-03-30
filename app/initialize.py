@@ -68,14 +68,6 @@ def add_token_header(response):
     return response
 
 
-@web_app.route('/', methods=['GET', 'POST'])
-def index():
-    """
-    Return the index.html template
-    """
-    return send_from_directory(template_directory, 'index.html')
-
-
 @web_app.route('/template/<path:template_path>', methods=['GET', 'POST'])
 def angular_template(template_path):
     """
