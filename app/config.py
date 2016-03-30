@@ -17,7 +17,6 @@ class Config(object):
     CSRF_ENABLED = True
     SECRET_KEY = os.environ['SECRET_KEY']
     PIVOTAL_TOKEN = ''
-    PIVOTAL_PROJECT_ID = 123
 
 
 class ProductionConfig(Config):
@@ -48,6 +47,8 @@ class TestingConfig(Config):
     """
     TESTING = True
     KEY_ON_TEST = 'KEY ON TEST'
+    PIVOTAL_TOKEN = 'PIVOTAL_TEST_TOKEN'
+    PIVOTAL_PROJECT_ID = 1234
 
 
 class ConfigClassNotFound(Exception):
