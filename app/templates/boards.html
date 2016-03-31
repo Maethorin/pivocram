@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Boards</h1>
+            <table class="table table-responsive table-striped">
+                <thead>
+                    <tr>
+                        <th>project</th>
+                        <th>pivotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="project in projects">
+                    <td><a href="/#/boards/{{project.id}}">{{project.name}}</a></td>
+                    <td><a href="https://pivotaltracker.com/zas/{{project.id}}">{{project.name}}</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

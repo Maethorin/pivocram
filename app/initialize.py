@@ -38,6 +38,7 @@ def add_cache_header(response):
     response.headers['Cache-Control'] = "no-cache, no-store, must-revalidate"
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
+    return response
 
 
 @web_app.after_request
@@ -68,7 +69,7 @@ def add_token_header(response):
     return response
 
 
-@web_app.route('/template/<path:template_path>', methods=['GET', 'POST'])
+@web_app.route('/templates/<path:template_path>', methods=['GET', 'POST'])
 def angular_template(template_path):
     """
     Return a file in the template folder to be used as a template for angular.
