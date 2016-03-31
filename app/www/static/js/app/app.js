@@ -31,16 +31,23 @@ angular.module(
     [
         'ngRoute',
         'ngResource',
-        'pivocram.services'
+        'pivocram.services',
+        'pivocram.board'
     ])
     .constant('appConfig', {
         'backendURL': setBackendURL(window.location)
     })
-    .config(['$sceDelegateProvider', 'appConfig', function($sceDelegateProvider, appConfig) {
+    .config(['$sceDelegateProvider', '$routeProvider', 'appConfig', function($sceDelegateProvider, $routeProvider, appConfig) {
         $sceDelegateProvider.resourceUrlWhitelist([
             'self',
             '{0}/**'.format([appConfig.backendURL])
         ]);
+        var templatesFolder = '{0}/templates'.format([appConfig.backendURL]);
+        $routeProvider
+            .when('/boards', {
+              templateUrl: '{0}/boards.html'.format([templatesFolder]),
+              controller: 'BoardsController'
+            })
     }])
     .run(['$rootScope', function($rootScope) {
         $rootScope.$on('$locationChangeSuccess', function(evt, absNewUrl, absOldUrl) {
