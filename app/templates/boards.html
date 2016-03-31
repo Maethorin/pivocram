@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>Boards</h1>
-            <table class="table table-responsive table-striped">
+            <table class="table table-responsive table-striped projects">
                 <thead>
                     <tr>
                         <th>project</th>
@@ -12,7 +12,7 @@
                 <tbody>
                 <tr ng-repeat="project in projects">
                     <td><a href="/#/boards/{{project.id}}">{{project.name}}</a></td>
-                    <td><a href="https://pivotaltracker.com/zas/{{project.id}}">{{project.name}}</a></td>
+                    <td><a href="https://www.pivotaltracker.com/n/projects//{{project.id}}" target="_blank">{{project.name}}</a></td>
                 </tr>
                 </tbody>
             </table>
