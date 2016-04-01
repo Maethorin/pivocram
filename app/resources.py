@@ -9,8 +9,6 @@ config = config_module.get_config()
 
 
 class ResourceBase(Resource):
-    client = pivocram.Client(config.PIVOTAL_TOKEN)
-
     @property
     def payload(self):
         return request.json
@@ -21,15 +19,15 @@ class ResourceBase(Resource):
 
 class StoryResource(ResourceBase):
     def get(self, project_id, story_id=None):
-        self.client.project_id = project_id
+        client = pivocram.Client(config.PIVOTAL_TOKEN, project_id)
         if story_id:
-            return self.client.get_story(story_id)
-        return self.client.get_stories()
+            return client.get_story(story_id)
+        return client.get_stories()
 
 
 class TaskResource(ResourceBase):
     def get(self, project_id, story_id, task_id=None):
-        self.client.project_id = project_id
+        client = pivocram.Client(config.PIVOTAL_TOKEN, project_id)
         if task_id:
-            return self.client.get_story_task(story_id, task_id)
-        return self.client.get_story_tasks(story_id)
+            return client.get_story_task(story_id, task_id)
+        return client.get_story_tasks(story_id)
