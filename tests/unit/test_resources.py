@@ -16,36 +16,35 @@ class ResourceBaseTest(base.TestCase):
 
 
 class StoriesResourceTest(base.TestCase):
-    @base.TestCase.mock.patch('app.resources.pivocram.Client')
+    @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_list_of_stories_if_no_id_passed(self, class_mock):
         resource = resources.StoryResource()
         client_mock = class_mock.return_value
         client_mock.get_stories.return_value = 'STORIES'
         resource.get(project_id=1122).should.be.equal('STORIES')
         client_mock.get_stories.assert_called_with()
-        class_mock.assert_called_with('PIVOTAL_TEST_TOKEN', 1122)
+        class_mock.assert_called_with(1122)
 
-    @base.TestCase.mock.patch('app.resources.pivocram.Client')
+    @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_story_if_id_passed(self, class_mock):
         resource = resources.StoryResource()
         client_mock = class_mock.return_value
         client_mock.get_story.return_value = 'STORY'
         resource.get(project_id=1122, story_id=1).should.be.equal('STORY')
         client_mock.get_story.assert_called_with(1)
-        class_mock.assert_called_with('PIVOTAL_TEST_TOKEN', 1122)
 
 
 class TasksResourceTest(base.TestCase):
-    @base.TestCase.mock.patch('app.resources.pivocram.Client')
+    @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_list_of_tasks_if_no_id_passed(self, class_mock):
         resource = resources.TaskResource()
         client_mock = class_mock.return_value
         client_mock.get_story_tasks.return_value = 'STORIES-TASKS'
         resource.get(project_id=1122, story_id=12).should.be.equal('STORIES-TASKS')
         client_mock.get_story_tasks.assert_called_with(12)
-        class_mock.assert_called_with('PIVOTAL_TEST_TOKEN', 1122)
+        class_mock.assert_called_with(1122)
 
-    @base.TestCase.mock.patch('app.resources.pivocram.Client')
+    @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_task_if_id_passed(self, class_mock):
         resource = resources.TaskResource()
         client_mock = class_mock.return_value
