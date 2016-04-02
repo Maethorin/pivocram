@@ -1,14 +1,13 @@
 language: python
 python:
-- '2.7'
+  - '2.7'
 env:
-- SECRET_KEY=NOT_SO_SECRET
-- APP_SETTINGS=app.config.TestingConfig
+  - SECRET_KEY=NOT_SO_SECRET APP_SETTINGS=app.config.TestingConfig
 install:
-- pip install -r requirements.txt
-- pip install -r requirements_dev.txt
+  - pip install -r requirements.txt
+  - pip install -r requirements_dev.txt
 script:
-- rm -rf .coverage
-- make test
+  - rm -rf .coverage
+  - make test
 after_success:
-- coveralls
+  - coveralls
