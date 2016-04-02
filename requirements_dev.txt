@@ -2,3 +2,4 @@ nose
 mock
 sure
 ipdb
+coveralls
