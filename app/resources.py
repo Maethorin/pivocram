@@ -22,7 +22,7 @@ class StoryResource(ResourceBase):
         client = pivocram.Client(project_id)
         if story_id:
             return client.get_story(story_id)
-        return client.get_stories()
+        return client.get_current_stories()
 
 
 class TaskResource(ResourceBase):
