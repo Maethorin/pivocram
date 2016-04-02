@@ -1,6 +1,9 @@
 language: python
 python:
 - '2.7'
+env:
+- SECRET_KEY=NOT_SO_SECRET
+- APP_SETTINGS=app.config.TestingConfig
 install:
 - pip install -r requirements.txt
 - pip install -r requirements_dev.txt
@@ -9,25 +12,3 @@ script:
 - make test
 after_success:
 - coveralls
-deploy:
-  provider: pypi
-  user: lojaintegrada
-  password:
-    secure: LW1ukvxxaznW7DCudSlh2kwbrn471duKvsmkUSuaEuDoKgG19+m1gyqfCsKJuuz4ocLOf3Wx2i5MJ9FxBM/0mR2iis4fKfQSIFB6UZJwDSx8xt+d+8hE3iHXeX1N3YoLQ5v+N0mjuA68WfIp4WF9NOauPJFuTCeeGJb86GeHiQk=
-  on:
-    tags: true
-    repo: lojaintegrada/LI-Pagador
-    all_branches: true
-notifications:
-  email:
-    recipients:
-    - contato@awsli.com.br
-    - marcio.duarte@lojaintegrada.com.br
-  hipchat:
-    rooms:
-      secure: DZzVGamIu+y9YkMKJfP/7imIYYI2czNoJuw861SGLlNhxisO8QkZg/Sz3DfSI9TKFovQOweooLI8kW7qsoh9so8or9q1rLX8uFVgWaValf1bUSvvXah/6uwjzxNK62u0CPbPfRKOKo+SeFiqV6HSDATEm3musQTihr60XCX9/qI=
-    template:
-      - '%{result} - %{repository_name}#%{build_number} (%{branch} - %{commit} : %{author}) (<a href="%{build_url}">Detalhes</a>/<a href="%{compare_url}">Altera&ccedil;&otilde;es</a>)'
-    format: html
-sudo: false
-Status API Training Shop Blog About
