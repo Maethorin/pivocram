@@ -5,7 +5,7 @@ env:
   - SECRET_KEY=NOT_SO_SECRET APP_SETTINGS=app.config.TestingConfig
 install:
   - pip install -r requirements.txt
-  - pip install -r requirements_dev.txt
+  - pip install -r requirements_dev.txt --upgrade
 script:
   - rm -rf .coverage
   - make test
