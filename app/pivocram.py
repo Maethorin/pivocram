@@ -7,7 +7,6 @@ config = module_config.get_config()
 
 class Connect(object):
     PIVOTAL_URL = 'https://www.pivotaltracker.com/services/v5'
-    #projects/#{project.id}/iterations/current
 
     def __init__(self):
         self.headers = {'X-TrackerToken': config.PIVOTAL_TOKEN}
@@ -37,6 +36,7 @@ class Client(object):
         self.project_id = project_id
         self.story = Story()
         self._current_iteration = None
+        self._current_stories = None
 
     @property
     def current_iteration(self):
@@ -45,9 +45,12 @@ class Client(object):
             self._current_iteration = project['current_iteration_number']
         return self._current_iteration
 
-    def get_current_stories(self):
-        iteration = self.connect.get_current_iteration(self.project_id, self.current_iteration)
-        return iteration['stories']
+    @property
+    def current_stories(self):
+        if self._current_stories is None:
+            iteration = self.connect.get_current_iteration(self.project_id, self.current_iteration)
+            self._current_stories = iteration['stories']
+        return self._current_stories
 
     def get_story(self, story_id):
         pass

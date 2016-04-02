@@ -41,15 +41,7 @@ class PivocramConnetcTest(base.TestCase):
 
 
 class PivocramBaseClientTest(base.TestCase):
-    project_mock = {"id": 1563465, "kind": "project", "name": "Eurobike", "version": 671, "iteration_length": 2,
-              "week_start_day": "Monday", "point_scale": "0,1,2,3,5,8", "point_scale_is_custom": False,
-              "bugs_and_chores_are_estimatable": False, "automatic_planning": False, "enable_tasks": True,
-              "time_zone": {"kind": "time_zone", "olson_name": "America/Sao_Paulo", "offset": "-03:00"},
-              "velocity_averaged_over": 3, "number_of_done_iterations_to_show": 12, "has_google_domain": False,
-              "enable_incoming_emails": True, "initial_velocity": 15, "public": False, "atom_enabled": False,
-              "project_type": "private", "start_date": "2016-03-28", "start_time": "2016-03-28T03:00:00Z",
-              "created_at": "2016-03-28T13:28:51Z", "updated_at": "2016-03-29T15:19:23Z", "account_id": 873085,
-              "current_iteration_number": 1, "enable_following": True}
+    project_mock = {"current_iteration_number": 1}
 
     def setUp(self):
         self.client = pivocram.Client(project_id='PROJECT-ID')
@@ -60,27 +52,30 @@ class PivocramBaseClientTest(base.TestCase):
     def test_should_be_create_with_project_id(self):
         self.client.project_id.should.be.equal('PROJECT-ID')
 
-    def test_should_have_method_to_list_stories(self):
-        hasattr(self.client, 'get_current_stories').should.be.truthy
+    def test_should_have_property_list_stories(self):
+        self.client._current_stories = 'CURRENT'
+        self.client.current_stories.should.be.equal('CURRENT')
 
     def test_should_have_method_to_get_story(self):
-        hasattr(self.client, 'get_story').should.be.truthy
+        self.client.get_story('STORY-ID').should.be.equal(None)
 
     def test_should_have_method_to_list_story_tasks(self):
-        hasattr(self.client, 'get_story_tasks').should.be.truthy
+        self.client.get_story_tasks('STORY-ID').should.be.equal(None)
 
     def test_should_have_method_to_get_story_task(self):
-        hasattr(self.client, 'get_story_task').should.be.truthy
+        self.client.get_story_task('STORY-ID', 'TASKS-ID').should.be.equal(None)
 
     def test_should_set_current_iteration(self):
         self.client.connect = self.mock.MagicMock()
         self.client.connect.get_project.return_value = self.project_mock
+        self.client._current_iteration = None
         self.client.current_iteration.should.be.equal(1)
+        self.client.connect.get_project.assert_called_with('PROJECT-ID')
 
     def test_should_get_current_stories(self):
         self.client.connect = self.mock.MagicMock()
         self.client.connect.get_current_iteration.return_value = {'stories': [1, 2, 3]}
-        self.client.get_current_stories().should.be.equal([1, 2, 3])
+        self.client.current_stories.should.be.equal([1, 2, 3])
 
 
 class StoryTest(base.TestCase):

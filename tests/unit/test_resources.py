@@ -20,9 +20,8 @@ class StoriesResourceTest(base.TestCase):
     def test_should_get_list_of_stories_if_no_id_passed(self, class_mock):
         resource = resources.StoryResource()
         client_mock = class_mock.return_value
-        client_mock.get_current_stories.return_value = 'STORIES'
+        client_mock.current_stories = 'STORIES'
         resource.get(project_id=1122).should.be.equal('STORIES')
-        client_mock.get_current_stories.assert_called_with()
         class_mock.assert_called_with(1122)
 
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
