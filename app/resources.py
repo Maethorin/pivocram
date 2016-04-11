@@ -22,7 +22,16 @@ class StoryResource(ResourceBase):
         client = pivocram.Client(project_id)
         if story_id:
             return client.get_story(story_id)
-        return client.current_stories
+        stories = {
+            'planned': [],
+            'started': [],
+            'finished': [],
+            'delivered': [],
+            'accepted': []
+        }
+        for story in client.current_stories:
+            stories[story['current_state']].append(story)
+        return stories
 
 
 class TaskResource(ResourceBase):

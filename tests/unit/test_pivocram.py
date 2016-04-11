@@ -76,7 +76,7 @@ class PivocramClientTest(base.TestCase):
 
     def test_should_get_projects(self):
         self.client.connect = self.mock.MagicMock()
-        self.client.connect.get_projects.return_value = {'projects': [1, 2, 3]}
+        self.client.connect.get_projects.return_value = [1, 2, 3]
         self.client.get_projects().should.be.equal([1, 2, 3])
 
     def test_should_get_empty_if_no_projects(self):

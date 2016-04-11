@@ -26,12 +26,52 @@ class ProjectsResourceTest(base.TestCase):
 
 
 class StoriesResourceTest(base.TestCase):
+    # accepted, delivered, finished, started, rejected, planned, unstarted, unscheduled
+
+    def create_mock_story(self, story_id, state='planned', estimate=2):
+        return {
+            'current_state': state,
+            'description': 'description {}-{}'.format(state, story_id),
+            'estimate': estimate,
+            'id': story_id,
+            'labels': [{'name': 'label-{}'.format(story_id)}],
+            'name': 'Story {} Name'.format(story_id),
+            'owner_ids': [],
+            'url': 'https://www.pivotaltracker.com/story/show/{}'.format(story_id)
+        }
+
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_list_of_stories_if_no_id_passed(self, class_mock):
         resource = resources.StoryResource()
         client_mock = class_mock.return_value
-        client_mock.current_stories = 'STORIES'
-        resource.get(project_id=1122).should.be.equal('STORIES')
+        client_mock.current_stories = [
+            self.create_mock_story(1),
+            self.create_mock_story(2),
+            self.create_mock_story(3, 'started'),
+            self.create_mock_story(4, 'started'),
+            self.create_mock_story(5, 'finished'),
+            self.create_mock_story(6, 'delivered'),
+            self.create_mock_story(7, 'accepted')
+        ]
+        resource.get(project_id=1122).should.be.equal({
+            'planned': [
+                self.create_mock_story(1),
+                self.create_mock_story(2)
+            ],
+            'started': [
+                self.create_mock_story(3, 'started'),
+                self.create_mock_story(4, 'started')
+            ],
+            'finished': [
+                self.create_mock_story(5, 'finished')
+            ],
+            'delivered': [
+                self.create_mock_story(6, 'delivered')
+            ],
+            'accepted': [
+                self.create_mock_story(7, 'accepted')
+            ]
+        })
         class_mock.assert_called_with(1122)
 
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
