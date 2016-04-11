@@ -20,7 +20,7 @@ class InitializeTest(base.TestCase):
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Headers': 'Content-Type,Authorization,Set-Cookie,XSRF-TOKEN',
             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-            'Access-Control-Allow-Origin': 'http://pivocram.com',
+            'Access-Control-Allow-Origin': 'https://pivocram.herokuapp.com',
             'Access-Control-Expose-Headers': 'Content-Type,Authorization,Set-Cookie,XSRF-TOKEN',
             'Access-Control-Max-Age': 21600
         })

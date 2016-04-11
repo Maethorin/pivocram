@@ -31,3 +31,9 @@ class TaskResource(ResourceBase):
         if task_id:
             return client.get_story_task(story_id, task_id)
         return client.get_story_tasks(story_id)
+
+
+class ProjectResource(ResourceBase):
+    def get(self):
+        client = pivocram.Client()
+        return client.get_projects()

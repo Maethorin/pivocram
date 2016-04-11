@@ -13,9 +13,9 @@ mock_directory = os.path.join(app_directory, 'mocks')
 
 api.create_api(web_app)
 
-DOMAIN = 'pivocram.com'
+DOMAIN = 'https://pivocram.herokuapp.com'
 if web_app.config['DEVELOPMENT']:
-    DOMAIN = '127.0.0.1:8000'
+    DOMAIN = 'http://127.0.0.1:8000'
 
 
 @web_app.before_request
@@ -47,7 +47,7 @@ def add_access_control_header(response):
     """
     Add response headers for CORS
     """
-    response.headers['Access-Control-Allow-Origin'] = 'http://{}'.format(DOMAIN)
+    response.headers['Access-Control-Allow-Origin'] = DOMAIN
     response.headers['Access-Control-Allow-Credentials'] = 'true'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization,Set-Cookie,XSRF-TOKEN'
     response.headers['Access-Control-Expose-Headers'] = 'Content-Type,Authorization,Set-Cookie,XSRF-TOKEN'

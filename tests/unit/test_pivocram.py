@@ -13,7 +13,10 @@ class PivocramConnetcTest(base.TestCase):
     def test_should_have_header_with_token(self):
         self.connect.headers.should.be.equal({'X-TrackerToken': 'PIVOTAL_TEST_TOKEN'})
 
-    def test_should_have_projects_url(self):
+    def test_should_have_projects_url_for_list(self):
+        self.connect.projects_url().should.be.equal('https://www.pivotaltracker.com/services/v5/projects')
+
+    def test_should_have_projects_url_for_item(self):
         self.connect.projects_url(123).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123')
 
     def test_should_have_iterations_url(self):
@@ -26,6 +29,12 @@ class PivocramConnetcTest(base.TestCase):
         req_mock.get.return_value = response
         self.connect.get('url').should.be.equal('req-response')
         req_mock.get.assert_called_with('url', headers={'X-TrackerToken': 'PIVOTAL_TEST_TOKEN'})
+
+    def test_should_get_projects_list(self):
+        self.connect.get = self.mock.MagicMock(return_value='req-response')
+        self.connect.projects_url = self.mock.MagicMock(return_value='url-projects')
+        self.connect.get_projects().should.be.equal('req-response')
+        self.connect.get.assert_called_with('url-projects')
 
     def test_should_get_project(self):
         self.connect.get = self.mock.MagicMock(return_value='req-response')
@@ -40,7 +49,7 @@ class PivocramConnetcTest(base.TestCase):
         self.connect.get.assert_called_with('url-iterations')
 
 
-class PivocramBaseClientTest(base.TestCase):
+class PivocramClientTest(base.TestCase):
     project_mock = {"current_iteration_number": 1}
 
     def setUp(self):
@@ -65,6 +74,16 @@ class PivocramBaseClientTest(base.TestCase):
     def test_should_have_method_to_get_story_task(self):
         self.client.get_story_task('STORY-ID', 'TASKS-ID').should.be.equal(None)
 
+    def test_should_get_projects(self):
+        self.client.connect = self.mock.MagicMock()
+        self.client.connect.get_projects.return_value = {'projects': [1, 2, 3]}
+        self.client.get_projects().should.be.equal([1, 2, 3])
+
+    def test_should_get_empty_if_no_projects(self):
+        self.client.connect = self.mock.MagicMock()
+        self.client.connect.get_projects.return_value = []
+        self.client.get_projects().should.be.equal([])
+
     def test_should_set_current_iteration(self):
         self.client.connect = self.mock.MagicMock()
         self.client.connect.get_project.return_value = self.project_mock
@@ -76,20 +95,3 @@ class PivocramBaseClientTest(base.TestCase):
         self.client.connect = self.mock.MagicMock()
         self.client.connect.get_current_iteration.return_value = {'stories': [1, 2, 3]}
         self.client.current_stories.should.be.equal([1, 2, 3])
-
-
-class StoryTest(base.TestCase):
-    def setUp(self):
-        self.client = pivocram.Client(project_id='PROJECT-ID')
-
-    def test_should_have_story_attibute(self):
-        self.assertTrue(isinstance(self.client.story, pivocram.Story))
-
-    def test_should_have_connect_in_story(self):
-        self.assertTrue(isinstance(self.client.story.connect, pivocram.Connect))
-
-    # @base.TestCase.mock.patch('app.pivocram.requests')
-    # def test_should_get_story_list(self, req_mock):
-    #     req_mock.get.return_value = [{'id': 1}, {'id': 2}]
-    #     story_list = self.client.story.get
-

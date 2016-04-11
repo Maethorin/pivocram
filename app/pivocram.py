@@ -11,14 +11,18 @@ class Connect(object):
     def __init__(self):
         self.headers = {'X-TrackerToken': config.PIVOTAL_TOKEN}
 
-    def projects_url(self, project_id):
-        return '{}/projects/{}'.format(self.PIVOTAL_URL, project_id)
+    def projects_url(self, project_id=None):
+        return '{}/projects{}'.format(self.PIVOTAL_URL, '/{}'.format(project_id) if project_id else '')
 
     def iterations_url(self, project_id, iteration_id):
         return '{}/iterations/{}'.format(self.projects_url(project_id), iteration_id)
 
     def get(self, url):
         return requests.get(url, headers=self.headers).json()
+
+    def get_projects(self):
+        url = self.projects_url()
+        return self.get(url)
 
     def get_project(self, project_id):
         url = self.projects_url(project_id)
@@ -31,12 +35,15 @@ class Connect(object):
 
 class Client(object):
 
-    def __init__(self, project_id):
+    def __init__(self, project_id=None):
         self.connect = Connect()
         self.project_id = project_id
-        self.story = Story()
         self._current_iteration = None
         self._current_stories = None
+
+    def get_projects(self):
+        projects = self.connect.get_projects()
+        return projects if projects else []
 
     @property
     def current_iteration(self):
@@ -60,8 +67,3 @@ class Client(object):
 
     def get_story_task(self, story_id, task_id):
         pass
-
-
-class Story(object):
-    def __init__(self):
-        self.connect = Connect()

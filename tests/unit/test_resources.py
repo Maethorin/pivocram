@@ -5,7 +5,7 @@ from app import pivocram, resources
 
 class ResourceBaseTest(base.TestCase):
     @base.TestCase.mock.patch('app.resources.request')
-    def test_should_return_reques_json_as_payload(self, request_mock):
+    def test_should_return_request_json_as_payload(self, request_mock):
         request_mock.json = 'PAYLOAD-JSON'
         base_resource = resources.ResourceBase()
         base_resource.payload.should.be.equal('PAYLOAD-JSON')
@@ -13,6 +13,16 @@ class ResourceBaseTest(base.TestCase):
     def test_should_have_option_respond_true(self):
         base_resource = resources.ResourceBase()
         base_resource.options().should.be.equal({'result': True})
+
+
+class ProjectsResourceTest(base.TestCase):
+    @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
+    def test_should_get_list_of_projects_if_no_id_passed(self, class_mock):
+        resource = resources.ProjectResource()
+        client_mock = class_mock.return_value
+        client_mock.get_projects.return_value = 'PROJECTS'
+        resource.get().should.be.equal('PROJECTS')
+        class_mock.assert_called_with()
 
 
 class StoriesResourceTest(base.TestCase):
