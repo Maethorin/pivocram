@@ -9,6 +9,7 @@ angular.module('pivocram.services', [])
              null,
             {'update': {method: 'PUT'}}
         );
+        
     }])
     .factory('StoryTask', ['$resource', 'appConfig', function($resource, appConfig) {
         return $resource(

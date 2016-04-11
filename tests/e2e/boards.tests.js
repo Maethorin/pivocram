@@ -15,3 +15,9 @@ describe('Acessing Boards Page', function() {
         expect(element.all(by.css('table.projects th')).get(0).getText()).toBe('project');
     })
 });
+describe('Acessing Board Page', function() {
+    it('should see a project list', function() {
+        browser.get('/#/boards/1234');
+        expect(element.all(by.css('.current-stories')).count()).toBeGreaterThan(0);
+    })
+});

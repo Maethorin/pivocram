@@ -48,6 +48,10 @@ angular.module(
               templateUrl: '{0}/boards.html'.format([templatesFolder]),
               controller: 'BoardsController'
             })
+            .when('/boards/:projectId', {
+              templateUrl: '{0}/board.html'.format([templatesFolder]),
+              controller: 'BoardController'
+            });
     }])
     .run(['$rootScope', function($rootScope) {
         $rootScope.$on('$locationChangeSuccess', function(evt, absNewUrl, absOldUrl) {

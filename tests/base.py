@@ -9,7 +9,8 @@ from mock import mock
 
 os.environ = {
     'APP_SETTINGS': 'app.config.TestingConfig',
-    'SECRET_KEY': 'SECRET-KEY'
+    'SECRET_KEY': 'SECRET-KEY',
+    'PIVOTAL_TOKEN': 'TOKEN_PIVOTAL'
 }
 
 # test_app = Flask(__name__)

@@ -1,9 +1,10 @@
 module.exports = function(config) {
-    config.set({
+    var configObj = {
 
         basePath: './',
         preprocessors: {
-          'app/templates/**/*.html': ['ng-html2js']
+          'app/templates/**/*.html': ['ng-html2js'],
+          'app/www/static/js/app/**/*.js': ['coverage']
         },
         ngHtml2JsPreprocessor: {
             cacheIdFromPath: function(filepath) {
@@ -33,8 +34,18 @@ module.exports = function(config) {
         plugins: [
             'karma-chrome-launcher',
             'karma-jasmine',
+            'karma-coverage',
             'karma-ng-html2js-preprocessor'
-        ]
-
-    });
+        ],
+        customLaunchers: {
+           Chrome_travis_ci: {
+               base: 'Chrome',
+               flags: ['--no-sandbox']
+           }
+        }
+    };
+    if (process.env.TRAVIS) {
+        configObj.browsers = ['Chrome_travis_ci'];
+    }
+    config.set(configObj);
 };

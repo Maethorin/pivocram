@@ -39,6 +39,7 @@ class DevelopmentConfig(Config):
     """
     DEVELOPMENT = True
     DEBUG = True
+    PIVOTAL_TOKEN = os.environ['PIVOTAL_TOKEN']
 
 
 class TestingConfig(Config):
