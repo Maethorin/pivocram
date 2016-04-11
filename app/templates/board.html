@@ -1,20 +1,87 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4 current-stories">
-            <div ng-repeat="story in stories">
-                {{story.description}}
+    <div class="row current-stories">
+        <div class="col-md-3 planned">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Planned</h3>
             </div>
-            <div ng-repeat="story in stories.notStarted" class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>{{story.title}}</h3>
+            <div class="panel-body">
+                <div ng-repeat="story in stories[0].planned" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>{{story.name}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-class="{'success': task.complete, 'warning': !task.complete, }" ng-repeat="task in story.tasks">
+                                {{ task.name }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <ul class="list-group">
-                        <li class="list-group-item" ng-class="{'success': task.complete, 'warning': !task.complete, }" ng-repeat="task in story.tasks">
-                            {{ task.title }}
-                        </li>
-                    </ul>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-3 started">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Started</h3>
+            </div>
+            <div class="panel-body">
+                <div ng-repeat="story in stories[0].started" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>{{story.name}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-class="{'success': task.complete, 'warning': !task.complete, }" ng-repeat="task in story.tasks">
+                                {{ task.name }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-3 finished">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Finished</h3>
+            </div>
+            <div class="panel-body">
+                <div ng-repeat="story in stories[0].finished" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>{{story.name}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-class="{'success': task.complete, 'warning': !task.complete, }" ng-repeat="task in story.tasks">
+                                {{ task.name }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-3 delivered">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Delivered</h3>
+            </div>
+            <div class="panel-body">
+                <div ng-repeat="story in stories[0].delivered" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>{{story.name}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-class="{'success': task.complete, 'warning': !task.complete, }" ng-repeat="task in story.tasks">
+                                {{ task.name }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
     </div>
