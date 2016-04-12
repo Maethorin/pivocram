@@ -50,6 +50,9 @@ describe('Board module', function() {
         it('should have a project list', function() {
             expect($scope.stories).toEqual([1, 2, 3]);
             expect(spyService).toHaveBeenCalledWith({projectId: 123});
-        })
+        });
+        it('should point to the story html tempalte using backendURL', function() {
+            expect($scope.storyTemplate).toEqual('{0}/templates/include/story.html'.format([appConfig.backendURL]));
+        });
     })
 });

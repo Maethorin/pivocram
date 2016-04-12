@@ -16,6 +16,7 @@
   },
   "scripts": {
     "start": "http-server ./app/www -a localhost -p 8000 -c-1",
+    "update-webdriver": "webdriver-manager update",
     "protractor": "protractor protractor.conf.js"
   },
   "devDependencies": {

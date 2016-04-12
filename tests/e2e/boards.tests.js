@@ -16,8 +16,26 @@ describe('Acessing Boards Page', function() {
     })
 });
 describe('Acessing Board Page', function() {
-    it('should see a project list', function() {
+    beforeEach(function() {
         browser.get('/#/boards/1234');
-        expect(element.all(by.css('.current-stories')).count()).toBeGreaterThan(0);
-    })
+    });
+    it('should have columns container', function() {
+        expect(element(by.css('.current-stories')).isPresent()).toBeTruthy();
+    });
+    it('should have planned columns', function() {
+        expect(element(by.css('.current-stories .planned')).isPresent()).toBeTruthy();
+        expect(element(by.css('.current-stories .planned .panel-heading h3')).getText()).toBe('PLANNED');
+    });
+    it('should have started columns', function() {
+        expect(element(by.css('.current-stories .started')).isPresent()).toBeTruthy();
+        expect(element(by.css('.current-stories .started .panel-heading h3')).getText()).toBe('STARTED');
+    });
+    it('should have started columns', function() {
+        expect(element(by.css('.current-stories .finished')).isPresent()).toBeTruthy();
+        expect(element(by.css('.current-stories .finished .panel-heading h3')).getText()).toBe('FINISHED');
+    });
+    it('should have started columns', function() {
+        expect(element(by.css('.current-stories .delivered')).isPresent()).toBeTruthy();
+        expect(element(by.css('.current-stories .delivered .panel-heading h3')).getText()).toBe('DELIVERED');
+    });
 });

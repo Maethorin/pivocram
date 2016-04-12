@@ -1,3 +1,5 @@
+$grid-gutter-width: 5px;
+
 @import "fontawesome/scss/font-awesome";
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
 @import url(https://fonts.googleapis.com/css?family=Oswald);
@@ -6,3 +8,5 @@ $imageUrl: "/static/img/";
 @mixin image-background($imageFile) {
     background-image: url($imageUrl + $imageFile);
 }
+
+@import "board";
