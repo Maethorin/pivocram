@@ -11,6 +11,8 @@ module.exports = function(grunt) {
                     "bower_components/angular-route/angular-route.js",
                     "bower_components/angular-resource/angular-resource.js",
                     "bower_components/jquery/dist/jquery.js",
+                    "bower_components/jquery-ui/jquery-ui.js",
+                    "bower_components/angular-dragdrop/src/angular-dragdrop.js",
                     "bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"
                 ],
                 dest: 'app/www/static/js/components.js'

@@ -31,7 +31,7 @@ class StoryResource(ResourceBase):
         }
         for story in client.current_stories:
             stories[story['current_state']].append(story)
-        return [stories]
+        return stories
 
 
 class TaskResource(ResourceBase):

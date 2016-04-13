@@ -31,6 +31,7 @@ angular.module(
     [
         'ngRoute',
         'ngResource',
+        'ngDragDrop',
         'pivocram.services',
         'pivocram.board'
     ])

@@ -42,7 +42,7 @@ describe('Board module', function() {
         var $scope, spyService;
         beforeEach(function() {
             $scope = $rootScope.$new();
-            spyService = spyOn(Story, 'query');
+            spyService = spyOn(Story, 'currents');
             spyService.and.returnValue([1, 2, 3]);
             var $routeParams = {projectId: 123};
             $controller('BoardController', {$scope: $scope, $routeParams: $routeParams})
@@ -51,8 +51,16 @@ describe('Board module', function() {
             expect($scope.stories).toEqual([1, 2, 3]);
             expect(spyService).toHaveBeenCalledWith({projectId: 123});
         });
-        it('should point to the story html tempalte using backendURL', function() {
-            expect($scope.storyTemplate).toEqual('{0}/templates/include/story.html'.format([appConfig.backendURL]));
+        it('should have column list', function() {
+            expect($scope.columns).toEqual([
+                {name: 'planned', label: 'Planned'},
+                {name: 'started', label: 'Started'},
+                {name: 'finished', label: 'Finished'},
+                {name: 'delivered', label: 'Delivered'}
+            ]);
+        });
+        it('should point to the column html template using backendURL', function() {
+            expect($scope.columnTemplate).toEqual('{0}/templates/include/board-column.html'.format([appConfig.backendURL]));
         });
     })
 });

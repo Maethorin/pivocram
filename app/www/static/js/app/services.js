@@ -7,9 +7,11 @@ angular.module('pivocram.services', [])
         return $resource(
             '{0}/api/projects/:projectId/stories/:storyId'.format([appConfig.backendURL]),
              null,
-            {'update': {method: 'PUT'}}
+            {
+                'update': {method: 'PUT'},
+                'currents': {method: 'GET'}
+            }
         );
-        
     }])
     .factory('StoryTask', ['$resource', 'appConfig', function($resource, appConfig) {
         return $resource(

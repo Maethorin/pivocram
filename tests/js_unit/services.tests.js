@@ -36,11 +36,11 @@ describe('App services', function() {
             });
         });
         describe('for stories', function() {
-            it('should call api/projects/:projectId/stories when query project`s stories', function() {
-                $httpBackend.expect("GET", "{0}/api/projects/123/stories".format([appConfig.backendURL])).respond(200, [{story: 'story-1'}]);
-                var stories = Story.query({projectId: 123});
+            it('should call api/projects/:projectId/stories when get project`s currents stories', function() {
+                $httpBackend.expect("GET", "{0}/api/projects/123/stories".format([appConfig.backendURL])).respond(200, {planned: [{story: 'story-1'}]});
+                var stories = Story.currents({projectId: 123});
                 $httpBackend.flush();
-                expect(stories[0].story).toBe('story-1');
+                expect(stories.planned[0].story).toBe('story-1');
             });
             it('should call api/projects/:projectId/stories/:storyId when get project`s story', function() {
                 $httpBackend.expect("GET", "{0}/api/projects/123/stories/1234".format([appConfig.backendURL])).respond(200, {story: 'story-1'});

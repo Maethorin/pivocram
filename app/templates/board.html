@@ -1,44 +1,5 @@
 <div class="container-fluid">
     <div class="row current-stories">
-        <div class="col-md-3 planned">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>Planned</h3>
-                </div>
-                <div class="panel-body column">
-                    <div ng-repeat="story in stories[0].planned" class="panel panel-default" ng-include="storyTemplate"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 started">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>Started</h3>
-                </div>
-                <div class="panel-body column">
-                    <div ng-repeat="story in stories[0].started" class="panel panel-default" ng-include="storyTemplate"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 finished">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>Finished</h3>
-                </div>
-                <div class="panel-body column">
-                    <div ng-repeat="story in stories[0].finished" class="panel panel-default" ng-include="storyTemplate"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 delivered">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>Delivered</h3>
-                </div>
-                <div class="panel-body column">
-                    <div ng-repeat="story in stories[0].delivered" class="panel panel-default" ng-include="storyTemplate"></div>
-                </div>
-            </div>
-        </div>
+        <ng-include ng-repeat="column in columns" src="columnTemplate"></ng-include>
     </div>
 </div>

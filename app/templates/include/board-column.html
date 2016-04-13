@@ -1,0 +1,30 @@
+<div class="col-md-3 {{column.name}}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>{{column.label}}</h3>
+        </div>
+        <div class="panel-body column" data-drop="true" ng-model="stories[column.name]" jqyoui-droppable="{multiple:true, onDrop: 'dropStory'}">
+            <div
+                ng-repeat="story in stories[column.name]"
+                ng-model="stories[column.name]"
+                class="panel panel-default"
+                data-jqyoui-options="{revert: 'invalid'}"
+                data-drag="true"
+                jqyoui-draggable="{index: {{$index}}, onStart:'dragStory(story)'}">
+                <div class="panel-heading">
+                    <div class="col-md-11">
+                        <h4>{{story.name}}</h4>
+                    </div>
+                    <div class="col-md-1"><span class="badge">{{story.estimate}}</span></div>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-class="{'success': task.complete, 'warning': !task.complete, }" ng-repeat="task in story.tasks">
+                            {{ task.name }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
