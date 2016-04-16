@@ -18,11 +18,11 @@ describe('Board module', function() {
         });
         it('should have configuration for boards route', function() {
             expect($route.routes['/boards'].controller).toBe('BoardsController');
-            expect($route.routes['/boards'].templateUrl).toBe('{0}/templates/boards.html'.format([appConfig.backendURL]));
+            expect($route.routes['/boards'].templateUrl).toBe('/templates/boards.html');
         });
         it('should have configuration for board route', function() {
             expect($route.routes['/boards/:projectId'].controller).toBe('BoardController');
-            expect($route.routes['/boards/:projectId'].templateUrl).toBe('{0}/templates/board.html'.format([appConfig.backendURL]));
+            expect($route.routes['/boards/:projectId'].templateUrl).toBe('/templates/board.html');
         });
     });
     describe('Initializing Boards', function() {
@@ -60,7 +60,7 @@ describe('Board module', function() {
             ]);
         });
         it('should point to the column html template using backendURL', function() {
-            expect($scope.columnTemplate).toEqual('{0}/templates/include/board-column.html'.format([appConfig.backendURL]));
+            expect($scope.columnTemplate).toEqual('/templates/include/board-column.html');
         });
     })
 });

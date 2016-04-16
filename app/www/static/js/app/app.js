@@ -43,7 +43,7 @@ angular.module(
             'self',
             '{0}/**'.format([appConfig.backendURL])
         ]);
-        var templatesFolder = '{0}/templates'.format([appConfig.backendURL]);
+        var templatesFolder = '/templates';
         $routeProvider
             .when('/boards', {
               templateUrl: '{0}/boards.html'.format([templatesFolder]),

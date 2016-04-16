@@ -65,6 +65,9 @@ Build all assets:
 
     $ grunt heroku
 
+To run an simple http server to serve the static files, use:
+
+    $ npm start
 
 ### Open in browser
 

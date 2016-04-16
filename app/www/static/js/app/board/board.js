@@ -12,11 +12,12 @@ angular.module('pivocram.board', [])
             {name: 'delivered', label: 'Delivered'}
         ];
         $scope.stories = Story.currents({projectId: $routeParams.projectId});
-        $scope.columnTemplate = '{0}/templates/include/board-column.html'.format([appConfig.backendURL]);
+        $scope.columnTemplate = '/templates/include/board-column.html';
         $scope.storyDragged = null;
         $scope.dragStory = function(event, ui, story) {
             $scope.storyDragged = story;
         };
-        $scope.dropStory = function() {
+        $scope.dropStory = function(event, ui) {
+            console.log(event);
         };
     }]);
