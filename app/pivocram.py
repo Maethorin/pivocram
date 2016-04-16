@@ -77,3 +77,6 @@ class Client(object):
 
     def get_story_task(self, story_id, task_id):
         pass
+
+    def update_story(self, story_id, data):
+        return self.connect.update_story(self.project_id, story_id, data)

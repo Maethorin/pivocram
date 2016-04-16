@@ -114,3 +114,9 @@ class PivocramClientTest(base.TestCase):
         self.client.connect = self.mock.MagicMock()
         self.client.connect.get_current_iteration.return_value = {'stories': [1, 2, 3]}
         self.client.current_stories.should.be.equal([1, 2, 3])
+
+    def test_should_update_story(self):
+        self.client.connect = self.mock.MagicMock()
+        self.client.connect.update_story.return_value = {'id': 1234}
+        self.client.update_story(1234, {'data': 'value'}).should.be.equal({'id': 1234})
+
