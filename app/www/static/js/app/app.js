@@ -43,16 +43,6 @@ angular.module(
             'self',
             '{0}/**'.format([appConfig.backendURL])
         ]);
-        var templatesFolder = '/templates';
-        $routeProvider
-            .when('/boards', {
-              templateUrl: '{0}/boards.html'.format([templatesFolder]),
-              controller: 'BoardsController'
-            })
-            .when('/boards/:projectId', {
-              templateUrl: '{0}/board.html'.format([templatesFolder]),
-              controller: 'BoardController'
-            });
     }])
     .run(['$rootScope', function($rootScope) {
         $rootScope.$on('$locationChangeSuccess', function(evt, absNewUrl, absOldUrl) {

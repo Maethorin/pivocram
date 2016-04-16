@@ -1,9 +1,9 @@
-<div class="col-md-3 {{column.name}}">
+<div class="{{column.name}}" ng-class="addColumnSize(column.name)">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3>{{column.label}}</h3>
         </div>
-        <div class="panel-body column" data-drop="true" ng-model="stories[column.name]" jqyoui-droppable="{multiple:true, onDrop: 'dropStory'}">
+        <div class="panel-body column" data-column="{{column.name}}" data-drop="true" ng-model="stories[column.name]" jqyoui-droppable="{multiple:true, beforeDrop: 'saveCurrentState'}">
             <div
                 ng-repeat="story in stories[column.name]"
                 ng-model="stories[column.name]"
