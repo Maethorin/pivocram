@@ -22,6 +22,9 @@ class PivocramConnetcTest(base.TestCase):
     def test_should_have_iterations_url(self):
         self.connect.iterations_url(123, 1).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123/iterations/1')
 
+    def test_should_have_project_stories_url_for_item(self):
+        self.connect.project_stories_url(123, 1234).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123/stories/1234')
+
     @base.TestCase.mock.patch('app.pivocram.requests')
     def test_should_make_get(self, req_mock):
         response = self.mock.MagicMock()
@@ -29,6 +32,14 @@ class PivocramConnetcTest(base.TestCase):
         req_mock.get.return_value = response
         self.connect.get('url').should.be.equal('req-response')
         req_mock.get.assert_called_with('url', headers={'X-TrackerToken': 'PIVOTAL_TEST_TOKEN'})
+
+    @base.TestCase.mock.patch('app.pivocram.requests')
+    def test_should_make_put(self, req_mock):
+        response = self.mock.MagicMock()
+        response.json.return_value = 'req-response'
+        req_mock.put.return_value = response
+        self.connect.put('url', {'data': 'value'}).should.be.equal('req-response')
+        req_mock.put.assert_called_with('url', {'data': 'value'}, headers={'X-TrackerToken': 'PIVOTAL_TEST_TOKEN'})
 
     def test_should_get_projects_list(self):
         self.connect.get = self.mock.MagicMock(return_value='req-response')
@@ -47,6 +58,14 @@ class PivocramConnetcTest(base.TestCase):
         self.connect.iterations_url = self.mock.MagicMock(return_value='url-iterations')
         self.connect.get_current_iteration(123, 1).should.be.equal('req-response')
         self.connect.get.assert_called_with('url-iterations')
+        self.connect.iterations_url.assert_called_with(123, 1)
+
+    def test_should_update_story(self):
+        self.connect.put = self.mock.MagicMock(return_value='req-response')
+        self.connect.project_stories_url = self.mock.MagicMock(return_value='url-stories')
+        self.connect.update_story(123, 1234, {'data': 'value'}).should.be.equal('req-response')
+        self.connect.put.assert_called_with('url-stories', {'data': 'value'})
+        self.connect.project_stories_url.assert_called_with(123, 1234)
 
 
 class PivocramClientTest(base.TestCase):

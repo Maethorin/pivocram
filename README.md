@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/Maethorin/pivocram/badge.svg?branch=master)](https://coveralls.io/github/Maethorin/pivocram?branch=master)
 
 
-# pivocram
+# PivoCram
 Pivotal Tracker Scrum Board
 
 ## Project Setup
