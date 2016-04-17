@@ -18,6 +18,10 @@ class ResourceBase(Resource):
 
 
 class StoryResource(ResourceBase):
+    def put(self, project_id, story_id):
+        client = pivocram.Client(project_id)
+        return client.update_story(story_id, request.json)
+
     def get(self, project_id, story_id=None):
         client = pivocram.Client(project_id)
         if story_id:

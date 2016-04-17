@@ -82,6 +82,16 @@ class StoriesResourceTest(base.TestCase):
         resource.get(project_id=1122, story_id=1).should.be.equal('STORY')
         client_mock.get_story.assert_called_with(1)
 
+    @base.TestCase.mock.patch('app.resources.request')
+    @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
+    def test_should_update_story_with_data_passed(self, class_mock, request_mock):
+        resource = resources.StoryResource()
+        client_mock = class_mock.return_value
+        request_mock.json = {'data': 'value'}
+        client_mock.update_story.return_value = 'UPDATED'
+        resource.put(project_id=1122, story_id=1).should.be.equal('UPDATED')
+        client_mock.update_story.assert_called_with(1, {'data': 'value'})
+
 
 class TasksResourceTest(base.TestCase):
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
