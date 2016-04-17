@@ -17,8 +17,11 @@ class Connect(object):
     def iterations_url(self, project_id, iteration_id):
         return '{}/iterations/{}'.format(self.projects_url(project_id), iteration_id)
 
-    def project_stories_url(self, project_id, story_id):
+    def project_story_url(self, project_id, story_id):
         return '{}/stories/{}'.format(self.projects_url(project_id), story_id)
+
+    def project_story_tasks_url(self, project_id, story_id):
+        return '{}/tasks'.format(self.project_story_url(project_id, story_id))
 
     def get(self, url):
         return requests.get(url, headers=self.headers).json()
@@ -38,8 +41,12 @@ class Connect(object):
         url = self.iterations_url(project_id, iteration_id)
         return self.get(url)
 
+    def get_project_story_tasks(self, project_id, story_id):
+        url = self.project_story_tasks_url(project_id, story_id)
+        return self.get(url)
+
     def update_story(self, project_id, story_id, data):
-        url = self.project_stories_url(project_id, story_id)
+        url = self.project_story_url(project_id, story_id)
         return self.put(url, data)
 
 
@@ -73,7 +80,7 @@ class Client(object):
         pass
 
     def get_story_tasks(self, story_id):
-        pass
+        return self.connect.get_project_story_tasks(self.project_id, story_id)
 
     def get_story_task(self, story_id, task_id):
         pass

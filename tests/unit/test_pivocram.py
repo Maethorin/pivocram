@@ -22,8 +22,11 @@ class PivocramConnetcTest(base.TestCase):
     def test_should_have_iterations_url(self):
         self.connect.iterations_url(123, 1).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123/iterations/1')
 
-    def test_should_have_project_stories_url_for_item(self):
-        self.connect.project_stories_url(123, 1234).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123/stories/1234')
+    def test_should_have_project_story_url(self):
+        self.connect.project_story_url(123, 1234).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123/stories/1234')
+
+    def test_should_have_project_story_taks_url(self):
+        self.connect.project_story_tasks_url(123, 1234).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123/stories/1234/tasks')
 
     @base.TestCase.mock.patch('app.pivocram.requests')
     def test_should_make_get(self, req_mock):
@@ -53,6 +56,13 @@ class PivocramConnetcTest(base.TestCase):
         self.connect.get_project(123).should.be.equal('req-response')
         self.connect.get.assert_called_with('url-projects')
 
+    def test_should_get_project_story_tasks(self):
+        self.connect.get = self.mock.MagicMock(return_value='req-response')
+        self.connect.project_story_tasks_url = self.mock.MagicMock(return_value='url-tasks')
+        self.connect.get_project_story_tasks(123, 1234).should.be.equal('req-response')
+        self.connect.get.assert_called_with('url-tasks')
+        self.connect.project_story_tasks_url.assert_called_with(123, 1234)
+
     def test_should_get_iteration_stories(self):
         self.connect.get = self.mock.MagicMock(return_value='req-response')
         self.connect.iterations_url = self.mock.MagicMock(return_value='url-iterations')
@@ -62,10 +72,10 @@ class PivocramConnetcTest(base.TestCase):
 
     def test_should_update_story(self):
         self.connect.put = self.mock.MagicMock(return_value='req-response')
-        self.connect.project_stories_url = self.mock.MagicMock(return_value='url-stories')
+        self.connect.project_story_url = self.mock.MagicMock(return_value='url-stories')
         self.connect.update_story(123, 1234, {'data': 'value'}).should.be.equal('req-response')
         self.connect.put.assert_called_with('url-stories', {'data': 'value'})
-        self.connect.project_stories_url.assert_called_with(123, 1234)
+        self.connect.project_story_url.assert_called_with(123, 1234)
 
 
 class PivocramClientTest(base.TestCase):
@@ -88,7 +98,10 @@ class PivocramClientTest(base.TestCase):
         self.client.get_story('STORY-ID').should.be.equal(None)
 
     def test_should_have_method_to_list_story_tasks(self):
-        self.client.get_story_tasks('STORY-ID').should.be.equal(None)
+        self.client.connect = self.mock.MagicMock()
+        self.client.connect.get_project_story_tasks.return_value = [1, 2, 3]
+        self.client.get_story_tasks('STORY-ID').should.be.equal([1, 2, 3])
+        self.client.connect.get_project_story_tasks.assert_called_with('PROJECT-ID', 'STORY-ID')
 
     def test_should_have_method_to_get_story_task(self):
         self.client.get_story_task('STORY-ID', 'TASKS-ID').should.be.equal(None)
