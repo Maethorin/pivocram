@@ -16,7 +16,7 @@ angular.module('pivocram.board', [])
               controller: 'BoardController'
             });
     }])
-    .controller("BoardController", ['$rootScope', '$scope', '$routeParams', '$q', 'Story', function($rootScope, $scope, $routeParams, $q, Story) {
+    .controller("BoardController", ['$rootScope', '$scope', '$routeParams', '$q', 'Story', 'StoryTask', function($rootScope, $scope, $routeParams, $q, Story, StoryTask) {
         $scope.columns = [
             {name: 'planned', label: 'Planned'},
             {name: 'started', label: 'Started'},
@@ -24,7 +24,21 @@ angular.module('pivocram.board', [])
             {name: 'delivered', label: 'Delivered'},
             {name: 'accepted', label: 'Accepted'}
         ];
-        $scope.stories = Story.currents({projectId: $routeParams.projectId});
+        $scope.stories = Story.currents({projectId: $routeParams.projectId}, function() {
+            angular.forEach($scope.stories, function(colunm) {
+                angular.forEach(colunm, function(story) {
+                    story.taskLoading = true;
+                    story.tasks = [];
+                    story.hasTasks = (story.current_state == 'planned' || story.current_state == 'started');
+                    story.getTasks = function() {
+                        var tasks = StoryTask.query({projectId: $routeParams.projectId, storyId: story.id}, function() {
+                            story.taskLoading = false;
+                            story.tasks = tasks;
+                        });
+                    };
+                });
+            })
+        });
         $scope.columnTemplate = '/templates/include/board-column.html';
         $scope.addColumnSize = function(columnName) {
             if (columnName == 'planned' || columnName == 'started') {
@@ -37,9 +51,11 @@ angular.module('pivocram.board', [])
             $scope.storyDragged = story;
         };
         $scope.saveCurrentState = function(event, ui) {
+            var currentState = $(event.target).data('column');
+            $scope.storyDragged.hasTasks = (currentState == 'planned' || currentState == 'started');
             return Story.update(
                 {projectId: $routeParams.projectId, storyId: $scope.storyDragged.id},
-                {"current_state": $(event.target).data('column')}
+                {"current_state": currentState}
             ).$promise;
         };
     }]);

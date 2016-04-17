@@ -7,20 +7,23 @@
             <div
                 ng-repeat="story in stories[column.name]"
                 ng-model="stories[column.name]"
-                class="panel panel-default"
+                class="panel panel-default story"
                 data-jqyoui-options="{revert: 'invalid'}"
                 data-drag="true"
                 jqyoui-draggable="{index: {{$index}}, onStart:'dragStory(story)'}">
-                <div class="panel-heading">
-                    <div class="col-md-11">
+                <div class="panel-heading" data-toggle="tooltip" title="{{story.name}}" tooltip-trigger="mouseenter" tooltip-animation="false" tooltip-placement="top" tooltip-popup-delay="0" tooltip-append-to-body="false">
+                    <div class="col-md-10">
                         <h4>{{story.name}}</h4>
                     </div>
-                    <div class="col-md-1"><span class="badge">{{story.estimate}}</span></div>
+                    <div class="col-md-2"><span class="badge">{{story.estimate}}pts</span></div>
                 </div>
-                <div class="panel-body">
-                    <ul class="list-group">
-                        <li class="list-group-item" ng-class="{'success': task.complete, 'warning': !task.complete, }" ng-repeat="task in story.tasks">
-                            {{ task.name }}
+                <div class="panel-body" ng-if="story.hasTasks">
+                    <div class="loading" ng-show="story.taskLoading"></div>
+                    <ul class="list-group" ng-init="story.getTasks()">
+                        <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete, }" ng-repeat="task in story.tasks">
+                            <i class="fa fa-check" ng-show="task.complete"></i>
+                            <i class="fa fa-square-o" ng-show="!task.complete"></i>
+                            {{ task.description }}
                         </li>
                     </ul>
                 </div>

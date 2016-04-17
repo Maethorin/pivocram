@@ -42,7 +42,7 @@ describe('Board module', function() {
             expect(spyService).toHaveBeenCalledWith();
         })
     });
-    describe('Initializing Board', function() {
+    describe('in board page', function() {
         var $scope, spyService;
         beforeEach(function() {
             $scope = $rootScope.$new();
@@ -53,8 +53,12 @@ describe('Board module', function() {
         });
         it('should have a project list', function() {
             expect($scope.stories).toEqual([1, 2, 3]);
-            expect(spyService).toHaveBeenCalledWith({projectId: 123});
+            expect(spyService).toHaveBeenCalledWith({projectId: 123}, jasmine.any(Function));
         });
+        // it('should define ', function() {
+        //     expect($scope.stories).toEqual([1, 2, 3]);
+        //     expect(spyService).toHaveBeenCalledWith({projectId: 123}, jasmine.any(Function));
+        // });
         it('should have column list', function() {
             expect($scope.columns).toEqual([
                 {name: 'planned', label: 'Planned'},
@@ -74,19 +78,39 @@ describe('Board module', function() {
         it('should point to the column html template using backendURL', function() {
             expect($scope.columnTemplate).toEqual('/templates/include/board-column.html');
         });
-        it('should set story dragged on drag', function() {
-            expect($scope.storyDragged).toBe(null);
-            $scope.dragStory('', '', 'DRAGGED');
-            expect($scope.storyDragged).toBe('DRAGGED');
-        });
-        it('should use resource to update story current state', function() {
-            $scope.storyDragged = {id: 12344};
-            $httpBackend.expect('PUT', '{0}/api/projects/123/stories/12344'.format([appConfig.backendURL]), {"current_state": "accepted"}).respond(200, {});
-            var dataSpy = spyOn($.fn, 'data');
-            dataSpy.and.returnValue('accepted');
-            $scope.saveCurrentState({target: '<div></div>'});
-            $httpBackend.flush();
-            expect(dataSpy).toHaveBeenCalledWith('column');
-        });
-    })
+        describe('dragging a story', function() {
+            it('should set story dragged on drag', function() {
+                expect($scope.storyDragged).toBe(null);
+                $scope.dragStory('', '', 'DRAGGED');
+                expect($scope.storyDragged).toBe('DRAGGED');
+            });
+            it('should use resource to update story current state', function() {
+                $scope.storyDragged = {id: 12344};
+                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/12344'.format([appConfig.backendURL]), {"current_state": "accepted"}).respond(200, {});
+                var dataSpy = spyOn($.fn, 'data');
+                dataSpy.and.returnValue('accepted');
+                $scope.saveCurrentState({target: '<div></div>'});
+                $httpBackend.flush();
+                expect(dataSpy).toHaveBeenCalledWith('column');
+            });
+            it('should set if story has task when moving to started', function() {
+                $scope.storyDragged = {id: 12344};
+                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/12344'.format([appConfig.backendURL]), {"current_state": "started"}).respond(200, {});
+                var dataSpy = spyOn($.fn, 'data');
+                dataSpy.and.returnValue('started');
+                $scope.saveCurrentState({target: '<div></div>'});
+                $httpBackend.flush();
+                expect($scope.storyDragged.hasTasks).toBeTruthy();
+            });
+            it('should set if story has task when moving to finished', function() {
+                $scope.storyDragged = {id: 12344};
+                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/12344'.format([appConfig.backendURL]), {"current_state": "finished"}).respond(200, {});
+                var dataSpy = spyOn($.fn, 'data');
+                dataSpy.and.returnValue('finished');
+                $scope.saveCurrentState({target: '<div></div>'});
+                $httpBackend.flush();
+                expect($scope.storyDragged.hasTasks).toBeFalsy();
+            });
+        })
+    });
 });

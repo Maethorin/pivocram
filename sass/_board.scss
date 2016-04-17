@@ -14,5 +14,40 @@
     }
     .column {
         min-height: 1080px;
+        .story {
+            &:hover {
+                @include box-shadow(2px 2px 8px 2px rgba(100, 100, 100, 0.6));
+                background-color: #EEE;
+            }
+            .panel-heading {
+                cursor: move;
+                padding: 5px;
+                h4 {
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+            }
+            .panel-body {
+                padding: 5px;
+            }
+            .list-group {
+                margin-bottom: 0;
+                .list-group-item {
+                    font-size: 11px;
+                    .fa {
+                        &.fa-square-o {
+                            cursor: pointer;
+                            color: #555;
+                            &:hover {
+                                color: #000;
+                            }
+                        }
+                        font-size: 15px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
     }
 }

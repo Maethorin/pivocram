@@ -1,5 +1,6 @@
 $grid-gutter-width: 5px;
 
+@import "compass";
 @import "fontawesome/scss/font-awesome";
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
 @import url(https://fonts.googleapis.com/css?family=Oswald);
@@ -7,6 +8,14 @@ $grid-gutter-width: 5px;
 $imageUrl: "/static/img/";
 @mixin image-background($imageFile) {
     background-image: url($imageUrl + $imageFile);
+}
+
+.loading {
+    @include image-background("loading_spinner.gif");
+    height: 30px;
+    background-size: 58px;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 
 @import "board";

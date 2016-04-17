@@ -49,3 +49,7 @@ angular.module(
             $rootScope.referrer = absOldUrl;
         });
     }]);
+
+$(function() {
+    $(".story .panel-heading").tooltip();
+});
