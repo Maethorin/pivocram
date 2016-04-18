@@ -5,10 +5,10 @@ from flask import Flask, send_from_directory, g, request, redirect
 
 import api, models
 
-web_app = Flask(__name__)
+web_app = Flask(__name__, static_folder='www/static')
 web_app.config.from_object(os.environ['APP_SETTINGS'])
 app_directory = os.path.join(os.getcwd(), 'app')
-template_directory = os.path.join(app_directory, 'templates')
+www_directory = os.path.join(app_directory, 'www')
 mock_directory = os.path.join(app_directory, 'mocks')
 
 api.create_api(web_app)
@@ -68,6 +68,19 @@ def add_token_header(response):
         token = user.generate_auth_token()
         response.headers['XSRF-TOKEN'] = token.decode('ascii')
     return response
+
+
+
+@web_app.route('/', defaults={'file_path': ''})
+@web_app.route('/templates/<path:file_path>', methods=['GET'])
+def www_files(file_path=None):
+    folder = ''
+    if not file_path:
+        file_path = 'index.html'
+    else:
+        folder = 'templates'
+    directory = os.path.join(www_directory, folder)
+    return send_from_directory(directory, file_path)
 
 
 def run():
