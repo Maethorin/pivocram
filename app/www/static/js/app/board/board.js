@@ -58,4 +58,9 @@ angular.module('pivocram.board', [])
                 {"current_state": currentState}
             ).$promise;
         };
+        $scope.completeTask = function(task, storyId) {
+            StoryTask.update({projectId: $routeParams.projectId, storyId: storyId, taskId: task.id}, {complete: true}, function() {
+                task.complete = true;
+            });
+        }
     }]);

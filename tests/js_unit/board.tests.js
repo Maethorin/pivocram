@@ -55,10 +55,6 @@ describe('Board module', function() {
             expect($scope.stories).toEqual([1, 2, 3]);
             expect(spyService).toHaveBeenCalledWith({projectId: 123}, jasmine.any(Function));
         });
-        // it('should define ', function() {
-        //     expect($scope.stories).toEqual([1, 2, 3]);
-        //     expect(spyService).toHaveBeenCalledWith({projectId: 123}, jasmine.any(Function));
-        // });
         it('should have column list', function() {
             expect($scope.columns).toEqual([
                 {name: 'planned', label: 'Planned'},
@@ -111,6 +107,21 @@ describe('Board module', function() {
                 $httpBackend.flush();
                 expect($scope.storyDragged.hasTasks).toBeFalsy();
             });
+        });
+        describe('finishing a task', function() {
+            it('should have function to mark task as complete', function() {
+                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": true}).respond(200, {});
+                var task = {complete: false, id: 12345};
+                $scope.completeTask(task, 1234);
+                $httpBackend.flush();
+                expect(task.complete).toBeTruthy();
+            });
+            it('should call resource to send complete to server', function() {
+                var task = {complete: false, id: 12345};
+                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": true}).respond(200, {});
+                $scope.completeTask(task, 1234);
+                $httpBackend.flush();
+            })
         })
     });
 });
