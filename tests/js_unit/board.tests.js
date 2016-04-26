@@ -88,7 +88,7 @@ describe('Board module', function() {
             spyService = spyOn(Story, 'currents');
             spyService.and.returnValue(stories);
             var $routeParams = {projectId: 123};
-            $controller('BoardController', {$scope: $scope, $routeParams: $routeParams})
+            $controller('BoardController', {$scope: $scope, $routeParams: $routeParams});
         });
         it('should have a project list', function() {
             expect($scope.stories).toEqual(stories);
@@ -114,8 +114,27 @@ describe('Board module', function() {
             expect($scope.columnTemplate).toEqual('/templates/include/board-column.html');
         });
         describe('loading stories', function() {
-            it('should define if story has task', function() {
-                
+            beforeEach(function() {
+                $scope.stories = stories;
+                $scope.updateStoryData();
+            });
+            it('should define that story has task if it was planned', function() {
+                expect(stories['planned'][0].hasTasks).toBeTruthy();
+            });
+            it('should define that story has task if it was unstarted', function() {
+                expect(stories['planned'][3].hasTasks).toBeTruthy();
+            });
+            it('should define that story has task if it was started', function() {
+                expect(stories['started'][0].hasTasks).toBeTruthy();
+            });
+            it('should define that story dos not has task if it was finished', function() {
+                expect(stories['finished'][0].hasTasks).toBeFalsy();
+            });
+            it('should define that story dos not has task if it was delivered', function() {
+                expect(stories['delivered'][0].hasTasks).toBeFalsy();
+            });
+            it('should define that story dos not has task if it was accepted', function() {
+                expect(stories['accepted'][0].hasTasks).toBeFalsy();
             });
         });
         describe('dragging a story', function() {
@@ -152,18 +171,25 @@ describe('Board module', function() {
                 expect($scope.storyDragged.hasTasks).toBeFalsy();
             });
         });
-        describe('finishing a task', function() {
-            it('should have function to mark task as complete', function() {
+        describe('changing a task status', function() {
+            it('should call function to change task status to complete', function() {
                 $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": "true"}).respond(200, {});
                 var task = {complete: false, id: 12345};
-                $scope.completeTask(task, 1234);
+                $scope.changeTaskStatus(task, 1234);
                 $httpBackend.flush();
                 expect(task.complete).toBeTruthy();
+            });
+            it('should call function to change task status to uncomplete', function() {
+                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": "false"}).respond(200, {});
+                var task = {complete: true, id: 12345};
+                $scope.changeTaskStatus(task, 1234);
+                $httpBackend.flush();
+                expect(task.complete).toBeFalsy();
             });
             it('should call resource to send complete to server', function() {
                 var task = {complete: false, id: 12345};
                 $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": "true"}).respond(200, {});
-                $scope.completeTask(task, 1234);
+                $scope.changeTaskStatus(task, 1234);
                 $httpBackend.flush();
             })
         })

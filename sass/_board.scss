@@ -36,15 +36,12 @@
                 .list-group-item {
                     font-size: 11px;
                     .fa {
-                        &.fa-square-o {
-                            cursor: pointer;
-                            color: #555;
-                            &:hover {
-                                color: #000;
-                            }
-                        }
+                        cursor: pointer;
                         font-size: 15px;
                         margin-right: 5px;
+                        &:hover {
+                            color: #000;
+                        }
                     }
                 }
             }

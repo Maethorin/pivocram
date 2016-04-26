@@ -24,12 +24,12 @@ angular.module('pivocram.board', [])
             {name: 'delivered', label: 'Delivered'},
             {name: 'accepted', label: 'Accepted'}
         ];
-        $scope.stories = Story.currents({projectId: $routeParams.projectId}, function() {
+        $scope.updateStoryData = function() {
             angular.forEach($scope.stories, function(colunm) {
                 angular.forEach(colunm, function(story) {
                     story.taskLoading = true;
                     story.tasks = [];
-                    story.hasTasks = (story.current_state == 'planned' || story.current_state == 'started');
+                    story.hasTasks = ['planned', 'unstarted', 'started'].indexOf(story.current_state) > -1;
                     story.getTasks = function() {
                         var tasks = StoryTask.query({projectId: $routeParams.projectId, storyId: story.id}, function() {
                             story.taskLoading = false;
@@ -38,7 +38,8 @@ angular.module('pivocram.board', [])
                     };
                 });
             })
-        });
+        };
+        $scope.stories = Story.currents({projectId: $routeParams.projectId}, $scope.updateStoryData);
         $scope.columnTemplate = '/templates/include/board-column.html';
         $scope.addColumnSize = function(columnName) {
             if (columnName == 'planned' || columnName == 'started') {
@@ -58,9 +59,10 @@ angular.module('pivocram.board', [])
                 {"current_state": currentState}
             ).$promise;
         };
-        $scope.completeTask = function(task, storyId) {
-            StoryTask.update({projectId: $routeParams.projectId, storyId: storyId, taskId: task.id}, {complete: 'true'}, function() {
-                task.complete = true;
+        $scope.changeTaskStatus = function(task, storyId) {
+            var state = task.complete ? 'false' : 'true';
+            StoryTask.update({projectId: $routeParams.projectId, storyId: storyId, taskId: task.id}, {complete: state}, function() {
+                task.complete = state == 'true';
             });
         }
     }]);

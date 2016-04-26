@@ -21,8 +21,7 @@
                     <div class="loading" ng-show="story.taskLoading"></div>
                     <ul class="list-group" ng-init="story.getTasks()">
                         <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete, }" ng-repeat="task in story.tasks">
-                            <i class="fa fa-check" ng-show="task.complete"></i>
-                            <i class="fa fa-square-o" ng-click="completeTask(task, story.id)" ng-show="!task.complete"></i>
+                            <i class="fa" ng-if="column.name == 'started'" ng-click="changeTaskStatus(task,story.id)" ng-class="{'fa-square-o': !task.complete, 'fa-check': task.complete}"></i>
                             {{ task.description }}
                         </li>
                     </ul>
