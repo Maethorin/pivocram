@@ -25,8 +25,11 @@ class PivocramConnetcTest(base.TestCase):
     def test_should_have_project_story_url(self):
         self.connect.project_story_url(123, 1234).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123/stories/1234')
 
-    def test_should_have_project_story_taks_url(self):
+    def test_should_have_project_story_tasks_url(self):
         self.connect.project_story_tasks_url(123, 1234).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123/stories/1234/tasks')
+
+    def test_should_have_project_story_task_url(self):
+        self.connect.project_story_task_url(123, 1234, 12345).should.be.equal('https://www.pivotaltracker.com/services/v5/projects/123/stories/1234/tasks/12345')
 
     @base.TestCase.mock.patch('app.pivocram.requests')
     def test_should_make_get(self, req_mock):
@@ -76,6 +79,13 @@ class PivocramConnetcTest(base.TestCase):
         self.connect.update_story(123, 1234, {'data': 'value'}).should.be.equal('req-response')
         self.connect.put.assert_called_with('url-stories', {'data': 'value'})
         self.connect.project_story_url.assert_called_with(123, 1234)
+
+    def test_should_update_story_task(self):
+        self.connect.put = self.mock.MagicMock(return_value='req-response')
+        self.connect.project_story_task_url = self.mock.MagicMock(return_value='url-stories')
+        self.connect.update_story_task(123, 1234, 12345, {'data': 'value'}).should.be.equal('req-response')
+        self.connect.put.assert_called_with('url-stories', {'data': 'value'})
+        self.connect.project_story_task_url.assert_called_with(123, 1234, 12345)
 
 
 class PivocramClientTest(base.TestCase):
@@ -132,4 +142,9 @@ class PivocramClientTest(base.TestCase):
         self.client.connect = self.mock.MagicMock()
         self.client.connect.update_story.return_value = {'id': 1234}
         self.client.update_story(1234, {'data': 'value'}).should.be.equal({'id': 1234})
+
+    def test_should_complete_story_task(self):
+        self.client.connect = self.mock.MagicMock()
+        self.client.connect.update_story_task.return_value = {'id': 1234}
+        self.client.complete_story_task(1234, 12345, {'data': 'value'}).should.be.equal({'id': 1234})
 

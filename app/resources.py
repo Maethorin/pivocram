@@ -45,6 +45,10 @@ class TaskResource(ResourceBase):
             return client.get_story_task(story_id, task_id)
         return client.get_story_tasks(story_id)
 
+    def put(self, project_id, story_id, task_id):
+        client = pivocram.Client(project_id)
+        return client.complete_story_task(story_id, task_id, request.json)
+
 
 class ProjectResource(ResourceBase):
     def get(self):

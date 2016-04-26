@@ -110,3 +110,13 @@ class TasksResourceTest(base.TestCase):
         client_mock.get_story_task.return_value = 'STORY-TASK'
         resource.get(project_id=1122, story_id=12, task_id=123).should.be.equal('STORY-TASK')
         client_mock.get_story_task.assert_called_with(12, 123)
+
+    @base.TestCase.mock.patch('app.resources.request')
+    @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
+    def test_should_complete_task_on_update(self, class_mock, request_mock):
+        resource = resources.TaskResource()
+        request_mock.json = {'complete': True}
+        client_mock = class_mock.return_value
+        client_mock.complete_story_task.return_value = 'completed'
+        resource.put(project_id=1122, story_id=12, task_id=123).should.be.equal('completed')
+        client_mock.complete_story_task.assert_called_with(12, 123, {'complete': True})
