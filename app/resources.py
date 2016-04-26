@@ -34,7 +34,10 @@ class StoryResource(ResourceBase):
             'accepted': []
         }
         for story in client.current_stories:
-            stories[story['current_state']].append(story)
+            current_state = story['current_state']
+            if current_state == 'unstarted':
+                current_state = 'planned'
+            stories[current_state].append(story)
         return stories
 
 

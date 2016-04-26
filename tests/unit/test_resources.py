@@ -51,12 +51,16 @@ class StoriesResourceTest(base.TestCase):
             self.create_mock_story(4, 'started'),
             self.create_mock_story(5, 'finished'),
             self.create_mock_story(6, 'delivered'),
-            self.create_mock_story(7, 'accepted')
+            self.create_mock_story(7, 'unstarted'),
+            self.create_mock_story(8, 'accepted'),
+            self.create_mock_story(9, 'unstarted')
         ]
         resource.get(project_id=1122).should.be.equal({
             'planned': [
                 self.create_mock_story(1),
-                self.create_mock_story(2)
+                self.create_mock_story(2),
+                self.create_mock_story(7, 'unstarted'),
+                self.create_mock_story(9, 'unstarted')
             ],
             'started': [
                 self.create_mock_story(3, 'started'),
@@ -69,7 +73,7 @@ class StoriesResourceTest(base.TestCase):
                 self.create_mock_story(6, 'delivered')
             ],
             'accepted': [
-                self.create_mock_story(7, 'accepted')
+                self.create_mock_story(8, 'accepted')
             ]
         })
         class_mock.assert_called_with(1122)
