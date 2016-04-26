@@ -24,9 +24,22 @@ angular.module('pivocram.board', [])
             {name: 'delivered', label: 'Delivered'},
             {name: 'accepted', label: 'Accepted'}
         ];
+        $scope.estimates = {
+            'planned': 0,
+            'unstarted': 0,
+            'started': 0,
+            'finished': 0,
+            'delivered': 0,
+            'accepted': 0
+        };
         $scope.updateStoryData = function() {
-            angular.forEach($scope.stories, function(colunm) {
-                angular.forEach(colunm, function(story) {
+            angular.forEach($scope.stories, function(column) {
+                angular.forEach(column, function(story) {
+                    var estimateKey = story.current_state;
+                    if (estimateKey == 'unstarted') {
+                        estimateKey = 'planned'
+                    }
+                    $scope.estimates[estimateKey] += story.estimate;
                     story.taskLoading = true;
                     story.tasks = [];
                     story.hasTasks = ['planned', 'unstarted', 'started'].indexOf(story.current_state) > -1;
@@ -37,7 +50,7 @@ angular.module('pivocram.board', [])
                         });
                     };
                 });
-            })
+            });
         };
         $scope.stories = Story.currents({projectId: $routeParams.projectId}, $scope.updateStoryData);
         $scope.columnTemplate = '/templates/include/board-column.html';

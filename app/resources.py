@@ -34,6 +34,8 @@ class StoryResource(ResourceBase):
             'accepted': []
         }
         for story in client.current_stories:
+            if story['story_type'] == 'release':
+                continue
             current_state = story['current_state']
             if current_state == 'unstarted':
                 current_state = 'planned'

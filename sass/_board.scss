@@ -19,6 +19,29 @@
                 @include box-shadow(2px 2px 8px 2px rgba(100, 100, 100, 0.6));
                 background-color: #EEE;
             }
+            .panel-footer {
+                .story-type {
+                    display: inline-block;
+                    width: 16px;
+                    height: 16px;
+                    float: right;
+                    &.feature {
+                        @include image-background("story-type-feature.png");
+                    }
+                    &.bug {
+                        @include image-background("story-type-bug.png");
+                    }
+                    &.chore {
+                        @include image-background("story-type-chore.png");
+                    }
+                    &.release {
+                        @include image-background("story-type-release.png");
+                    }
+                }
+            }
+            .panel-heading, .panel-footer {
+                padding: 5px;
+            }
             .panel-heading {
                 cursor: move;
                 padding: 5px;
