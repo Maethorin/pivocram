@@ -1,10 +1,10 @@
 <div class="{{column.name}}" ng-class="addColumnSize(column.name)">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div class="col-md-10">
+            <div class="col-md-11">
                 <h3>{{column.label}}</h3>
             </div>
-            <div class="col-md-2"><span class="badge">{{estimates[column.name]}}pts</span></div>
+            <div class="col-md-1"><span class="badge badge-{{column.name}}">{{estimates[column.name]}}</span></div>
         </div>
         <div class="panel-body column" data-column="{{column.name}}" data-drop="true" ng-model="stories[column.name]" jqyoui-droppable="{multiple:true, beforeDrop: 'saveCurrentState'}">
             <div
@@ -18,7 +18,7 @@
                     <div class="col-md-10">
                         <h4>{{story.name}}</h4>
                     </div>
-                    <div class="col-md-2"><span class="badge">{{story.estimate}}<span ng-if="story.hasTasks">pts</span></span></div>
+                    <div class="col-md-2"><span class="badge badge-{{story.estimate}}">{{story.estimate}}</span></div>
                 </div>
                 <div class="panel-body" ng-if="story.hasTasks">
                     <div class="loading" ng-show="story.taskLoading"></div>

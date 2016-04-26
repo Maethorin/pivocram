@@ -1,6 +1,23 @@
 .current-stories {
     .panel-heading {
         overflow: hidden;
+        .badge {
+            &.badge-planned {
+                background-color: #be0010;
+            }
+            &.badge-started {
+                background-color: #cd9211;
+            }
+            &.badge-finished {
+                background-color: #c1b50d;
+            }
+            &.badge-delivered {
+                background-color: #6eae03;
+            }
+            &.badge-accepted {
+                background-color: #4bb207;
+            }
+        }
     }
     h3 {
         text-align: center;
@@ -45,6 +62,27 @@
             .panel-heading {
                 cursor: move;
                 padding: 5px;
+                .badge {
+                    float: right;
+                }
+                .badge-0 {
+                    background-color: #4bb207;
+                }
+                .badge-1 {
+                    background-color: #6eae03;
+                }
+                .badge-2 {
+                    background-color: #96aa07;
+                }
+                .badge-3 {
+                    background-color: #d7cb0d;
+                }
+                .badge-5 {
+                    background-color: #cd9211;
+                }
+                .badge-8 {
+                    background-color: #f2c8a5;
+                }
                 h4 {
                     text-overflow: ellipsis;
                     white-space: nowrap;
