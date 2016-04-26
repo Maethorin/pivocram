@@ -43,16 +43,55 @@ describe('Board module', function() {
         })
     });
     describe('in board page', function() {
-        var $scope, spyService;
+        var $scope, spyService, stories;
+        function createMockStory(storyId, state, estimate) {
+            if (!state) {
+                state = 'planned';
+            }
+            if (!estimate) {
+                estimate = 2;
+            }
+            return {
+                'current_state': state,
+                'description': 'description {0}-{1}'.format([state, storyId]),
+                'estimate': estimate,
+                'id': storyId,
+                'labels': [{'name': 'label-{0}'.format([storyId])}],
+                'name': 'Story {0} Name'.format([storyId]),
+                'owner_ids': [],
+                'url': 'https://www.pivotaltracker.com/story/show/{0}'.format([storyId])
+            }
+        }
         beforeEach(function() {
             $scope = $rootScope.$new();
+            stories = {
+                'planned': [
+                    createMockStory(1),
+                    createMockStory(2),
+                    createMockStory(7, 'unstarted'),
+                    createMockStory(9, 'unstarted')
+                ],
+                'started': [
+                    createMockStory(3, 'started'),
+                    createMockStory(4, 'started')
+                ],
+                'finished': [
+                    createMockStory(5, 'finished')
+                ],
+                'delivered': [
+                    createMockStory(6, 'delivered')
+                ],
+                'accepted': [
+                    createMockStory(8, 'accepted')
+                ]
+            };
             spyService = spyOn(Story, 'currents');
-            spyService.and.returnValue([1, 2, 3]);
+            spyService.and.returnValue(stories);
             var $routeParams = {projectId: 123};
             $controller('BoardController', {$scope: $scope, $routeParams: $routeParams})
         });
         it('should have a project list', function() {
-            expect($scope.stories).toEqual([1, 2, 3]);
+            expect($scope.stories).toEqual(stories);
             expect(spyService).toHaveBeenCalledWith({projectId: 123}, jasmine.any(Function));
         });
         it('should have column list', function() {
@@ -73,6 +112,11 @@ describe('Board module', function() {
         });
         it('should point to the column html template using backendURL', function() {
             expect($scope.columnTemplate).toEqual('/templates/include/board-column.html');
+        });
+        describe('loading stories', function() {
+            it('should define if story has task', function() {
+                
+            });
         });
         describe('dragging a story', function() {
             it('should set story dragged on drag', function() {
@@ -110,7 +154,7 @@ describe('Board module', function() {
         });
         describe('finishing a task', function() {
             it('should have function to mark task as complete', function() {
-                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": true}).respond(200, {});
+                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": "true"}).respond(200, {});
                 var task = {complete: false, id: 12345};
                 $scope.completeTask(task, 1234);
                 $httpBackend.flush();
@@ -118,7 +162,7 @@ describe('Board module', function() {
             });
             it('should call resource to send complete to server', function() {
                 var task = {complete: false, id: 12345};
-                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": true}).respond(200, {});
+                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": "true"}).respond(200, {});
                 $scope.completeTask(task, 1234);
                 $httpBackend.flush();
             })
