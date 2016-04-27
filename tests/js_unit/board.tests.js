@@ -260,7 +260,12 @@ describe('Board module', function() {
                 $httpBackend.expect('PUT', '{0}/api/projects/123/stories/1234/tasks/12345'.format([appConfig.backendURL]), {"complete": "true"}).respond(200, {});
                 $scope.changeTaskStatus(task, 1234);
                 $httpBackend.flush();
-            })
+            });
+            it('should do nothing if task are already changing', function() {
+                var task = {complete: false, id: 12345, changing: true};
+                $scope.changeTaskStatus(task, 1234);
+                expect(task.complete).toBeFalsy();
+            });
         })
     });
 });

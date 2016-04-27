@@ -11,11 +11,12 @@ $imageUrl: "/static/img/";
 }
 
 .loading {
-    @include image-background("loading_spinner.gif");
-    height: 30px;
-    background-size: 58px;
-    background-position: center center;
-    background-repeat: no-repeat;
+    text-align: center;
+    i {
+        font-size: 41px;
+        width: 43px;
+        height: 39px;
+    }
 }
 
 @import "board";

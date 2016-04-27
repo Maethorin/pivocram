@@ -120,9 +120,14 @@ angular.module('pivocram.board', [])
             ).$promise;
         };
         $scope.changeTaskStatus = function(task, storyId) {
+            if (task.changing) {
+                return false;
+            }
+            task.changing = true;
             var state = task.complete ? 'false' : 'true';
             StoryTask.update({projectId: $routeParams.projectId, storyId: storyId, taskId: task.id}, {complete: state}, function() {
                 task.complete = state == 'true';
+                task.changing = false;
             });
         }
     }]);
