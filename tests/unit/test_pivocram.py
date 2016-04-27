@@ -101,8 +101,8 @@ class PivocramClientTest(base.TestCase):
         self.client.project_id.should.be.equal('PROJECT-ID')
 
     def test_should_have_property_list_stories(self):
-        self.client._current_stories = 'CURRENT'
-        self.client.current_stories.should.be.equal('CURRENT')
+        self.client._current_iteration = 'CURRENT'
+        self.client.current_iteration.should.be.equal('CURRENT')
 
     def test_should_have_method_to_get_story(self):
         self.client.get_story('STORY-ID').should.be.equal(None)
@@ -129,14 +129,14 @@ class PivocramClientTest(base.TestCase):
     def test_should_set_current_iteration(self):
         self.client.connect = self.mock.MagicMock()
         self.client.connect.get_project.return_value = self.project_mock
-        self.client._current_iteration = None
-        self.client.current_iteration.should.be.equal(1)
+        self.client._current_iteration_number = None
+        self.client.current_iteration_number.should.be.equal(1)
         self.client.connect.get_project.assert_called_with('PROJECT-ID')
 
     def test_should_get_current_stories(self):
         self.client.connect = self.mock.MagicMock()
         self.client.connect.get_current_iteration.return_value = {'stories': [1, 2, 3]}
-        self.client.current_stories.should.be.equal([1, 2, 3])
+        self.client.current_iteration.should.be.equal({'stories': [1, 2, 3]})
 
     def test_should_update_story(self):
         self.client.connect = self.mock.MagicMock()

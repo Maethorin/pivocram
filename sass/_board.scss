@@ -1,33 +1,92 @@
+$graph-part-width: 30px;
+$background-planned: #be0010;
+$background-started: #cd9211;
+$background-finished: #c1b50d;
+$background-delivered: #6eae03;
+$background-accepted: #4bb207;
+h3 {
+    text-align: center;
+    font-size: 15px;
+    text-transform: uppercase;
+    margin: 0;
+}
+h4 {
+    font-size: 13px;
+    margin: 0;
+}
+.burn-up {
+    margin-bottom: 20px;
+    .col-md-2 {
+        text-align: right;
+        line-height: 35px;
+        font-size: 15px;
+        font-weight: bold;
+        padding-right: 15px;
+    }
+    span {
+        display: inline-block;
+        width: $graph-part-width;
+        height: 40px;
+        border: 1px solid #CECECE;
+        text-align: center;
+        line-height: 35px;
+        &.day {
+            background-color: #DDD;
+            &.passed {
+                background-color: $background-accepted;
+            }
+        }
+        &.day-1 {
+            width: $graph-part-width;
+        }
+        &.day-2 {
+            width: $graph-part-width * 2;
+        }
+        &.day-3 {
+            width: $graph-part-width * 3;
+        }
+        &.day-4 {
+            width: $graph-part-width * 4;
+        }
+    }
+    .points {
+        &.planned {
+            background-color: $background-planned;
+        }
+        &.started {
+            background-color: $background-started;
+        }
+        &.finished {
+            background-color: $background-finished;
+        }
+        &.delivered {
+            background-color: $background-finished;
+        }
+        &.accepted {
+            background-color: $background-finished;
+        }
+    }
+}
 .current-stories {
     .panel-heading {
         overflow: hidden;
         .badge {
             &.badge-planned {
-                background-color: #be0010;
+                background-color: $background-planned;
             }
             &.badge-started {
-                background-color: #cd9211;
+                background-color: $background-started;
             }
             &.badge-finished {
-                background-color: #c1b50d;
+                background-color: $background-finished;
             }
             &.badge-delivered {
-                background-color: #6eae03;
+                background-color: $background-delivered;
             }
             &.badge-accepted {
-                background-color: #4bb207;
+                background-color: $background-accepted;
             }
         }
-    }
-    h3 {
-        text-align: center;
-        font-size: 15px;
-        text-transform: uppercase;
-        margin: 0;
-    }
-    h4 {
-        font-size: 13px;
-        margin: 0;
     }
     .column {
         min-height: 1080px;
@@ -78,7 +137,7 @@
                     background-color: #d7cb0d;
                 }
                 .badge-5 {
-                    background-color: #cd9211;
+                    background-color: $background-started;
                 }
                 .badge-8 {
                     background-color: #f2c8a5;

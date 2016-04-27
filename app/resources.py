@@ -26,21 +26,26 @@ class StoryResource(ResourceBase):
         client = pivocram.Client(project_id)
         if story_id:
             return client.get_story(story_id)
-        stories = {
-            'planned': [],
-            'started': [],
-            'finished': [],
-            'delivered': [],
-            'accepted': []
+        current_iteration = client.current_iteration
+        iteration = {
+            'start': current_iteration['start'],
+            'finish': current_iteration['finish'],
+            'stories': {
+                'planned': [],
+                'started': [],
+                'finished': [],
+                'delivered': [],
+                'accepted': []
+            }
         }
-        for story in client.current_stories:
+        for story in current_iteration['stories']:
             if story['story_type'] == 'release':
                 continue
             current_state = story['current_state']
             if current_state == 'unstarted':
                 current_state = 'planned'
-            stories[current_state].append(story)
-        return stories
+            iteration['stories'][current_state].append(story)
+        return iteration
 
 
 class TaskResource(ResourceBase):

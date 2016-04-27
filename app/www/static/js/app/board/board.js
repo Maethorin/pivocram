@@ -32,13 +32,27 @@ angular.module('pivocram.board', [])
             'delivered': 0,
             'accepted': 0
         };
+        function parseDate(date) {
+            date = date.split('').slice(0, 10).join('').split('-');
+            return new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2]));
+        }
+        function range(value) {
+            var result = [];
+            for (var i = 1;  i <= value; i++) {
+                result.push(i);
+            }
+            return result;
+        }
         $scope.updateStoryData = function() {
+            $scope.stories = $scope.iteration.stories;
+            var totalPoints = [];
             angular.forEach($scope.stories, function(column) {
                 angular.forEach(column, function(story) {
                     var estimateKey = story.current_state;
                     if (estimateKey == 'unstarted') {
                         estimateKey = 'planned'
                     }
+                    totalPoints.push(story.estimate);
                     $scope.estimates[estimateKey] += story.estimate;
                     story.taskLoading = true;
                     story.tasks = [];
@@ -51,8 +65,41 @@ angular.module('pivocram.board', [])
                     };
                 });
             });
+            $q.all(totalPoints).then(function () {
+                var start = parseDate($scope.iteration.start);
+                var finish = parseDate($scope.iteration.finish);
+                var days = parseInt((finish - start) / (1000 * 60 * 60 * 24)) + start.getDate() - 2;
+                $scope.devDays = [];
+                var today = new Date();
+                for (var dayNumber = start.getDate(); dayNumber <= days; dayNumber++) {
+                    start.setDate(start.getDate() + 1);
+                    if (start.getDay() != 0 && start.getDay() != 6) {
+                        var passed = today.getDate() > start.getDate() && today.getMonth() == start.getMonth();
+                        $scope.devDays.push({id: dayNumber, day: start.getDate(), points: 0, passed: passed});
+                    }
+                }
+
+                totalPoints = totalPoints.reduce(function(a, b) { return a + b; });
+                for (var devdayIndex = 0; devdayIndex < $scope.devDays.length; devdayIndex++) {
+                    $scope.devDays[devdayIndex].points = totalPoints / $scope.devDays.length;
+                }
+
+                $scope.pointsPerColumn = [];
+                var accumlatedPoint = 1;
+                function addPointsToColumn(columnName) {
+                    angular.forEach(range($scope.estimates[columnName]), function() {
+                        $scope.pointsPerColumn.push({column: columnName, point: accumlatedPoint});
+                        accumlatedPoint += 1;
+                    });
+                }
+                addPointsToColumn('accepted');
+                addPointsToColumn('delivered');
+                addPointsToColumn('finished');
+                addPointsToColumn('started');
+                addPointsToColumn('planned');
+             });
         };
-        $scope.stories = Story.currents({projectId: $routeParams.projectId}, $scope.updateStoryData);
+        $scope.iteration = Story.currents({projectId: $routeParams.projectId}, $scope.updateStoryData);
         $scope.columnTemplate = '/templates/include/board-column.html';
         $scope.addColumnSize = function(columnName) {
             if (columnName == 'planned' || columnName == 'started') {

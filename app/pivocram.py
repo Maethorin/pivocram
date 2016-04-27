@@ -62,26 +62,25 @@ class Client(object):
     def __init__(self, project_id=None):
         self.connect = Connect()
         self.project_id = project_id
+        self._current_iteration_number = None
         self._current_iteration = None
-        self._current_stories = None
 
     def get_projects(self):
         projects = self.connect.get_projects()
         return projects if projects else []
 
     @property
-    def current_iteration(self):
-        if self._current_iteration is None:
+    def current_iteration_number(self):
+        if self._current_iteration_number is None:
             project = self.connect.get_project(self.project_id)
-            self._current_iteration = project['current_iteration_number']
-        return self._current_iteration
+            self._current_iteration_number = project['current_iteration_number']
+        return self._current_iteration_number
 
     @property
-    def current_stories(self):
-        if self._current_stories is None:
-            iteration = self.connect.get_current_iteration(self.project_id, self.current_iteration)
-            self._current_stories = iteration['stories']
-        return self._current_stories
+    def current_iteration(self):
+        if self._current_iteration is None:
+            self._current_iteration = self.connect.get_current_iteration(self.project_id, self.current_iteration_number)
+        return self._current_iteration
 
     def get_story(self, story_id):
         pass

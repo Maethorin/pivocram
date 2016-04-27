@@ -3,6 +3,15 @@ describe('Board module', function() {
     var $routeParams = {
         projectId: 123
     };
+    var qMock = {
+        all: function() {
+            return {
+                then: function(callback) {
+                    callback();
+                }
+            }
+        }
+    };
     beforeEach(module('pivocram'));
     beforeEach(inject(function(_$route_, _appConfig_, _$controller_, _$rootScope_, _$httpBackend_, _Project_, _Story_) {
         $route = _$route_;
@@ -43,7 +52,7 @@ describe('Board module', function() {
         })
     });
     describe('in board page', function() {
-        var $scope, spyService, stories;
+        var $scope, spyService, iteration;
         function createMockStory(storyId, state, estimate) {
             if (!state) {
                 state = 'planned';
@@ -64,35 +73,49 @@ describe('Board module', function() {
         }
         beforeEach(function() {
             $scope = $rootScope.$new();
-            stories = {
-                'planned': [
-                    createMockStory(1),
-                    createMockStory(2),
-                    createMockStory(7, 'unstarted'),
-                    createMockStory(9, 'unstarted')
-                ],
-                'started': [
-                    createMockStory(3, 'started'),
-                    createMockStory(4, 'started')
-                ],
-                'finished': [
-                    createMockStory(5, 'finished')
-                ],
-                'delivered': [
-                    createMockStory(6, 'delivered')
-                ],
-                'accepted': [
-                    createMockStory(8, 'accepted')
-                ]
+            iteration = {
+                'start': '2016-04-24blablabla',
+                'finish': '2016-05-09blablabla',
+                'stories': {
+                    'planned': [
+                        createMockStory(1),
+                        createMockStory(2),
+                        createMockStory(7, 'unstarted'),
+                        createMockStory(9, 'unstarted')
+                    ],
+                    'started': [
+                        createMockStory(3, 'started'),
+                        createMockStory(4, 'started')
+                    ],
+                    'finished': [
+                        createMockStory(5, 'finished')
+                    ],
+                    'delivered': [
+                        createMockStory(6, 'delivered')
+                    ],
+                    'accepted': [
+                        createMockStory(8, 'accepted')
+                    ]
+                }
             };
             spyService = spyOn(Story, 'currents');
-            spyService.and.returnValue(stories);
+            spyService.and.returnValue(iteration);
             var $routeParams = {projectId: 123};
-            $controller('BoardController', {$scope: $scope, $routeParams: $routeParams});
+            $controller('BoardController', {$scope: $scope, $routeParams: $routeParams, $q: qMock});
         });
         it('should have a project list', function() {
-            expect($scope.stories).toEqual(stories);
+            expect($scope.iteration).toEqual(iteration);
             expect(spyService).toHaveBeenCalledWith({projectId: 123}, jasmine.any(Function));
+        });
+        it('should have estimate per column', function() {
+            expect($scope.estimates).toEqual({
+                'planned': 0,
+                'unstarted': 0,
+                'started': 0,
+                'finished': 0,
+                'delivered': 0,
+                'accepted': 0
+            });
         });
         it('should have column list', function() {
             expect($scope.columns).toEqual([
@@ -115,27 +138,73 @@ describe('Board module', function() {
         });
         describe('loading stories', function() {
             beforeEach(function() {
-                $scope.stories = stories;
+                $scope.stories = iteration;
                 $scope.updateStoryData();
             });
             it('should define that story has task if it was planned', function() {
-                expect(stories['planned'][0].hasTasks).toBeTruthy();
+                expect(iteration.stories['planned'][0].hasTasks).toBeTruthy();
             });
             it('should define that story has task if it was unstarted', function() {
-                expect(stories['planned'][3].hasTasks).toBeTruthy();
+                expect(iteration.stories['planned'][3].hasTasks).toBeTruthy();
             });
             it('should define that story has task if it was started', function() {
-                expect(stories['started'][0].hasTasks).toBeTruthy();
+                expect(iteration.stories['started'][0].hasTasks).toBeTruthy();
             });
             it('should define that story dos not has task if it was finished', function() {
-                expect(stories['finished'][0].hasTasks).toBeFalsy();
+                expect(iteration.stories['finished'][0].hasTasks).toBeFalsy();
             });
             it('should define that story dos not has task if it was delivered', function() {
-                expect(stories['delivered'][0].hasTasks).toBeFalsy();
+                expect(iteration.stories['delivered'][0].hasTasks).toBeFalsy();
             });
             it('should define that story dos not has task if it was accepted', function() {
-                expect(stories['accepted'][0].hasTasks).toBeFalsy();
+                expect(iteration.stories['accepted'][0].hasTasks).toBeFalsy();
             });
+            it('should fill estimates per column', function() {
+                expect($scope.estimates).toEqual({
+                    planned: 8,
+                    unstarted: 0,
+                    started: 4,
+                    finished: 2,
+                    delivered: 2,
+                    accepted: 2
+                });
+            });
+            it('should define dev days', function() {
+                expect($scope.devDays).toEqual([
+                    { id: 24, day: 25, points: 1.8, passed: true },
+                    { id: 25, day: 26, points: 1.8, passed: true },
+                    { id: 26, day: 27, points: 1.8, passed: false },
+                    { id: 27, day: 28, points: 1.8, passed: false },
+                    { id: 28, day: 29, points: 1.8, passed: false },
+                    { id: 31, day: 2, points: 1.8, passed: false },
+                    { id: 32, day: 3, points: 1.8, passed: false },
+                    { id: 33, day: 4, points: 1.8, passed: false },
+                    { id: 34, day: 5, points: 1.8, passed: false },
+                    { id: 35, day: 6, points: 1.8, passed: false }
+                ]);
+            });
+            it('should define points per column', function() {
+                expect($scope.pointsPerColumn).toEqual([
+                    { column: 'accepted', point: 1 },
+                    { column: 'accepted', point: 2 },
+                    { column: 'delivered', point: 3 },
+                    { column: 'delivered', point: 4 },
+                    { column: 'finished', point: 5 },
+                    { column: 'finished', point: 6 },
+                    { column: 'started', point: 7 },
+                    { column: 'started', point: 8 },
+                    { column: 'started', point: 9 },
+                    { column: 'started', point: 10 },
+                    { column: 'planned', point: 11 },
+                    { column: 'planned', point: 12 },
+                    { column: 'planned', point: 13 },
+                    { column: 'planned', point: 14 },
+                    { column: 'planned', point: 15 },
+                    { column: 'planned', point: 16 },
+                    { column: 'planned', point: 17 },
+                    { column: 'planned', point: 18 }
+                ]);
+            })
         });
         describe('dragging a story', function() {
             it('should set story dragged on drag', function() {
