@@ -1,4 +1,4 @@
-$graph-part-width: 30px;
+$graph-part-width: 23px;
 $background-planned: #be0010;
 $background-started: #cd9211;
 $background-finished: #c1b50d;
@@ -30,10 +30,15 @@ h4 {
         border: 1px solid #CECECE;
         text-align: center;
         line-height: 35px;
+        font-size: 12px;
+        font-weight: bold;
+        color: #FFF;
         &.day {
             background-color: #DDD;
+            color: #999;
             &.passed {
                 background-color: $background-accepted;
+                color: #FFF;
             }
         }
         &.day-1 {
@@ -47,6 +52,9 @@ h4 {
         }
         &.day-4 {
             width: $graph-part-width * 4;
+        }
+        &.day-5 {
+            width: $graph-part-width * 5;
         }
     }
     .points {
