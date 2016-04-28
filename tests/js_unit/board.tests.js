@@ -139,6 +139,7 @@ describe('Board module', function() {
         describe('loading stories', function() {
             beforeEach(function() {
                 $scope.stories = iteration;
+                $scope.today = new Date(2016, 3, 27);
                 $scope.updateStoryData();
             });
             it('should define that story has task if it was planned', function() {

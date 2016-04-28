@@ -43,6 +43,7 @@ angular.module('pivocram.board', [])
             }
             return result;
         }
+        $scope.today = new Date();
         $scope.updateStoryData = function() {
             $scope.stories = $scope.iteration.stories;
             var totalPoints = [];
@@ -70,11 +71,10 @@ angular.module('pivocram.board', [])
                 var finish = parseDate($scope.iteration.finish);
                 var days = parseInt((finish - start) / (1000 * 60 * 60 * 24)) + start.getDate() - 2;
                 $scope.devDays = [];
-                var today = new Date();
                 for (var dayNumber = start.getDate(); dayNumber <= days; dayNumber++) {
                     start.setDate(start.getDate() + 1);
                     if (start.getDay() != 0 && start.getDay() != 6) {
-                        var passed = today.getDate() > start.getDate() && today.getMonth() == start.getMonth();
+                        var passed = $scope.today.getDate() > start.getDate() && $scope.today.getMonth() == start.getMonth();
                         $scope.devDays.push({id: dayNumber, day: start.getDate(), points: 0, passed: passed});
                     }
                 }
