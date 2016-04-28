@@ -24,14 +24,6 @@ angular.module('pivocram.board', [])
             {name: 'delivered', label: 'Delivered'},
             {name: 'accepted', label: 'Accepted'}
         ];
-        $scope.estimates = {
-            'planned': 0,
-            'unstarted': 0,
-            'started': 0,
-            'finished': 0,
-            'delivered': 0,
-            'accepted': 0
-        };
         function parseDate(date) {
             date = date.split('').slice(0, 10).join('').split('-');
             return new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2]));
@@ -45,7 +37,17 @@ angular.module('pivocram.board', [])
         }
         $scope.today = new Date();
         $scope.updateStoryData = function() {
-            $scope.stories = $scope.iteration.stories;
+            if (!$scope.stories) {
+                $scope.stories = $scope.iteration.stories;
+            }
+            $scope.estimates = {
+                'planned': 0,
+                'unstarted': 0,
+                'started': 0,
+                'finished': 0,
+                'delivered': 0,
+                'accepted': 0
+            };
             var totalPoints = [];
             angular.forEach($scope.stories, function(column) {
                 angular.forEach(column, function(story) {
@@ -55,15 +57,17 @@ angular.module('pivocram.board', [])
                     }
                     totalPoints.push(story.estimate);
                     $scope.estimates[estimateKey] += story.estimate;
-                    story.taskLoading = true;
-                    story.tasks = [];
                     story.hasTasks = ['planned', 'unstarted', 'started'].indexOf(story.current_state) > -1;
-                    story.getTasks = function() {
-                        var tasks = StoryTask.query({projectId: $routeParams.projectId, storyId: story.id}, function() {
-                            story.taskLoading = false;
-                            story.tasks = tasks;
-                        });
-                    };
+                    if (!story.tasks && story.hasTasks) {
+                        story.taskLoading = true;
+                        story.tasks = [];
+                        story.getTasks = function() {
+                            var tasks = StoryTask.query({projectId: $routeParams.projectId, storyId: story.id}, function() {
+                                story.taskLoading = false;
+                                story.tasks = tasks;
+                            });
+                        };
+                    }
                 });
             });
             $q.all(totalPoints).then(function () {
@@ -111,9 +115,14 @@ angular.module('pivocram.board', [])
         $scope.dragStory = function(event, ui, story) {
             $scope.storyDragged = story;
         };
+        $scope.dropStory = function() {
+            $scope.updateStoryData();
+            $scope.$apply();
+        };
         $scope.saveCurrentState = function(event, ui) {
             var currentState = $(event.target).data('column');
             $scope.storyDragged.hasTasks = (currentState == 'planned' || currentState == 'started');
+            $scope.storyDragged.current_state = currentState;
             return Story.update(
                 {projectId: $routeParams.projectId, storyId: $scope.storyDragged.id},
                 {"current_state": currentState}

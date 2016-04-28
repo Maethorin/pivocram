@@ -52,7 +52,7 @@ describe('Board module', function() {
         })
     });
     describe('in board page', function() {
-        var $scope, spyService, iteration;
+        var $scope, spyService, iteration, estimates, pointsPerColumn;
         function createMockStory(storyId, state, estimate) {
             if (!state) {
                 state = 'planned';
@@ -73,6 +73,34 @@ describe('Board module', function() {
         }
         beforeEach(function() {
             $scope = $rootScope.$new();
+            estimates = {
+                planned: 8,
+                unstarted: 0,
+                started: 4,
+                finished: 2,
+                delivered: 2,
+                accepted: 2
+            };
+            pointsPerColumn = [
+                { column: 'accepted', point: 1 },
+                { column: 'accepted', point: 2 },
+                { column: 'delivered', point: 3 },
+                { column: 'delivered', point: 4 },
+                { column: 'finished', point: 5 },
+                { column: 'finished', point: 6 },
+                { column: 'started', point: 7 },
+                { column: 'started', point: 8 },
+                { column: 'started', point: 9 },
+                { column: 'started', point: 10 },
+                { column: 'planned', point: 11 },
+                { column: 'planned', point: 12 },
+                { column: 'planned', point: 13 },
+                { column: 'planned', point: 14 },
+                { column: 'planned', point: 15 },
+                { column: 'planned', point: 16 },
+                { column: 'planned', point: 17 },
+                { column: 'planned', point: 18 }
+            ];
             iteration = {
                 'start': '2016-04-24blablabla',
                 'finish': '2016-05-09blablabla',
@@ -107,16 +135,6 @@ describe('Board module', function() {
             expect($scope.iteration).toEqual(iteration);
             expect(spyService).toHaveBeenCalledWith({projectId: 123}, jasmine.any(Function));
         });
-        it('should have estimate per column', function() {
-            expect($scope.estimates).toEqual({
-                'planned': 0,
-                'unstarted': 0,
-                'started': 0,
-                'finished': 0,
-                'delivered': 0,
-                'accepted': 0
-            });
-        });
         it('should have column list', function() {
             expect($scope.columns).toEqual([
                 {name: 'planned', label: 'Planned'},
@@ -138,7 +156,7 @@ describe('Board module', function() {
         });
         describe('loading stories', function() {
             beforeEach(function() {
-                $scope.stories = iteration;
+                $scope.iteration = iteration;
                 $scope.today = new Date(2016, 3, 27);
                 $scope.updateStoryData();
             });
@@ -161,14 +179,7 @@ describe('Board module', function() {
                 expect(iteration.stories['accepted'][0].hasTasks).toBeFalsy();
             });
             it('should fill estimates per column', function() {
-                expect($scope.estimates).toEqual({
-                    planned: 8,
-                    unstarted: 0,
-                    started: 4,
-                    finished: 2,
-                    delivered: 2,
-                    accepted: 2
-                });
+                expect($scope.estimates).toEqual(estimates);
             });
             it('should define dev days', function() {
                 expect($scope.devDays).toEqual([
@@ -185,26 +196,7 @@ describe('Board module', function() {
                 ]);
             });
             it('should define points per column', function() {
-                expect($scope.pointsPerColumn).toEqual([
-                    { column: 'accepted', point: 1 },
-                    { column: 'accepted', point: 2 },
-                    { column: 'delivered', point: 3 },
-                    { column: 'delivered', point: 4 },
-                    { column: 'finished', point: 5 },
-                    { column: 'finished', point: 6 },
-                    { column: 'started', point: 7 },
-                    { column: 'started', point: 8 },
-                    { column: 'started', point: 9 },
-                    { column: 'started', point: 10 },
-                    { column: 'planned', point: 11 },
-                    { column: 'planned', point: 12 },
-                    { column: 'planned', point: 13 },
-                    { column: 'planned', point: 14 },
-                    { column: 'planned', point: 15 },
-                    { column: 'planned', point: 16 },
-                    { column: 'planned', point: 17 },
-                    { column: 'planned', point: 18 }
-                ]);
+                expect($scope.pointsPerColumn).toEqual(pointsPerColumn);
             })
         });
         describe('dragging a story', function() {
@@ -231,6 +223,15 @@ describe('Board module', function() {
                 $httpBackend.flush();
                 expect($scope.storyDragged.hasTasks).toBeTruthy();
             });
+            it('should set story current state when moving', function() {
+                $scope.storyDragged = {id: 12344};
+                $httpBackend.expect('PUT', '{0}/api/projects/123/stories/12344'.format([appConfig.backendURL]), {"current_state": "started"}).respond(200, {});
+                var dataSpy = spyOn($.fn, 'data');
+                dataSpy.and.returnValue('started');
+                $scope.saveCurrentState({target: '<div></div>'});
+                $httpBackend.flush();
+                expect($scope.storyDragged.current_state).toBe('started');
+            });
             it('should set if story has task when moving to finished', function() {
                 $scope.storyDragged = {id: 12344};
                 $httpBackend.expect('PUT', '{0}/api/projects/123/stories/12344'.format([appConfig.backendURL]), {"current_state": "finished"}).respond(200, {});
@@ -240,6 +241,90 @@ describe('Board module', function() {
                 $httpBackend.flush();
                 expect($scope.storyDragged.hasTasks).toBeFalsy();
             });
+            it('should update column estimates', function() {
+                $scope.updateStoryData();
+                expect($scope.estimates).toEqual(estimates);
+                $scope.stories = {
+                    'planned': [
+                        createMockStory(1),
+                        createMockStory(2),
+                        createMockStory(7, 'unstarted'),
+                        createMockStory(9, 'unstarted')
+                    ],
+                    'started': [
+                        createMockStory(3, 'started'),
+                        createMockStory(4, 'started')
+                    ],
+                    'finished': [
+                        createMockStory(5, 'finished'),
+                        createMockStory(6, 'finished')
+                    ],
+                    'delivered': [
+                    ],
+                    'accepted': [
+                        createMockStory(7, 'accepted'),
+                        createMockStory(8, 'accepted')
+                    ]
+                };
+                $scope.dropStory();
+                expect($scope.estimates).toEqual({
+                    planned: 8,
+                    unstarted: 0,
+                    started: 4,
+                    finished: 4,
+                    delivered: 0,
+                    accepted: 4
+                });
+            });
+            it('should update points', function() {
+                $scope.updateStoryData();
+                expect($scope.pointsPerColumn).toEqual(pointsPerColumn);
+                $scope.stories = {
+                    'planned': [
+                        createMockStory(1),
+                        createMockStory(2),
+                        createMockStory(7, 'unstarted'),
+                        createMockStory(9, 'unstarted')
+                    ],
+                    'started': [
+                        createMockStory(3, 'started'),
+                        createMockStory(4, 'started')
+                    ],
+                    'finished': [
+                        createMockStory(5, 'finished'),
+                        createMockStory(6, 'finished')
+                    ],
+                    'delivered': [
+                    ],
+                    'accepted': [
+                        createMockStory(7, 'accepted'),
+                        createMockStory(8, 'accepted')
+                    ]
+                };
+                $scope.dropStory();
+                expect($scope.pointsPerColumn).toEqual([
+                    { column: 'accepted', point: 1 },
+                    { column: 'accepted', point: 2 },
+                    { column: 'accepted', point: 3 },
+                    { column: 'accepted', point: 4 },
+                    { column: 'finished', point: 5 },
+                    { column: 'finished', point: 6 },
+                    { column: 'finished', point: 7 },
+                    { column: 'finished', point: 8 },
+                    { column: 'started', point: 9 },
+                    { column: 'started', point: 10 },
+                    { column: 'started', point: 11 },
+                    { column: 'started', point: 12 },
+                    { column: 'planned', point: 13 },
+                    { column: 'planned', point: 14 },
+                    { column: 'planned', point: 15 },
+                    { column: 'planned', point: 16 },
+                    { column: 'planned', point: 17 },
+                    { column: 'planned', point: 18 },
+                    { column: 'planned', point: 19 },
+                    { column: 'planned', point: 20 }
+                ]);
+            })
         });
         describe('changing a task status', function() {
             it('should call function to change task status to complete', function() {
