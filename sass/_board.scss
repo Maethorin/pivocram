@@ -60,10 +60,10 @@ h4 {
             background-color: $background-finished;
         }
         &.delivered {
-            background-color: $background-finished;
+            background-color: $background-delivered;
         }
         &.accepted {
-            background-color: $background-finished;
+            background-color: $background-accepted;
         }
     }
 }
