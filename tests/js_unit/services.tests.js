@@ -1,16 +1,20 @@
 describe('App services', function() {
-    var $httpBackend, $resource, appConfig, Project, Story, StoryTask, AuthService;
+    var $httpBackend, $resource, appConfig, Login, Project, Story, StoryTask, AuthService;
     beforeEach(module('pivocram'));
-    beforeEach(inject(function(_$httpBackend_, _$resource_, _appConfig_, _Project_, _Story_, _StoryTask_, _AuthService_) {
+    beforeEach(inject(function(_$httpBackend_, _$resource_, _appConfig_, _Login_, _Project_, _Story_, _StoryTask_, _AuthService_) {
         $httpBackend = _$httpBackend_;
         $resource = _$resource_;
         appConfig = _appConfig_;
+        Login = _Login_;
         Project = _Project_;
         Story = _Story_;
         StoryTask = _StoryTask_;
         AuthService = _AuthService_;
     }));
     describe('definitions', function() {
+        it('should have resource to login', function() {
+            expect(Login).toBeDefined();
+        });
         it('should have resource to projects', function() {
             expect(Project).toBeDefined();
         });
@@ -45,6 +49,21 @@ describe('App services', function() {
         });
     });
     describe('resources', function() {
+        describe('for login', function() {
+            it('should call api/login when send login data', function() {
+                $httpBackend.expect(
+                    "POST",
+                    "{0}/api/login".format([appConfig.backendURL]), {email: 'test@test.com', password: '1234'}
+                ).respond(200, {token: 'TOKEN', userId: 123});
+                var login = new Login({
+                    email: 'test@test.com',
+                    password: '1234'
+                });
+                login.$save();
+                $httpBackend.flush();
+                expect(login.token).toBe('TOKEN');
+            });
+        });
         describe('for projects', function() {
             it('should call api/projects when query projects', function() {
                 $httpBackend.expect("GET", "{0}/api/projects".format([appConfig.backendURL])).respond(200, [{project: 'project-1'}]);
