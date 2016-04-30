@@ -13,6 +13,8 @@ def create_api(app):
     Used when creating a Flask App to register the REST API and its resources
     """
     api = Api(app)
+    api.add_resource(resources.LoginResource,
+                     '/api/login')
     api.add_resource(resources.ProjectResource,
                      '/api/projects')
     api.add_resource(resources.StoryResource,
