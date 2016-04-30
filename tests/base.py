@@ -4,8 +4,10 @@
 import os
 import unittest
 from mock import mock
+from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
 
-# from flask import Flask
+from app import database
 
 os.environ = {
     'APP_SETTINGS': 'app.config.TestingConfig',
@@ -14,8 +16,9 @@ os.environ = {
     'DATABASE_URL': 'postgresql+psycopg2://pivocram:pivocram@localhost:5432/pivocram'
 }
 
-# test_app = Flask(__name__)
-# test_app.config.from_object(os.environ['APP_SETTINGS'])
+test_app = Flask(__name__)
+test_app.config.from_object(os.environ['APP_SETTINGS'])
+database.AppRepository.db = SQLAlchemy(test_app)
 
 
 class TestCase(unittest.TestCase):

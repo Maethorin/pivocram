@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from tests import base
-from app import pivocram, resources
+from app import resources
 
 
 class ResourceBaseTest(base.TestCase):
@@ -29,6 +29,45 @@ class ResourceBaseTest(base.TestCase):
     def test_should_have_option_respond_true(self):
         base_resource = resources.ResourceBase()
         base_resource.options().should.be.equal({'result': True})
+
+
+class LoginResourceTest(base.TestCase):
+    @base.TestCase.mock.patch('app.resources.models.User')
+    @base.TestCase.mock.patch('app.resources.request')
+    @base.TestCase.mock.patch('app.resources.g')
+    def test_return_token_if_login_is_successfull(self, g_mock, request_mock, user_cls_mock):
+        request_mock.json = {'email': 'test@test.com', 'password': '1234'}
+        user_mock = self.mock.MagicMock()
+        user_mock.id = 'USER-ID'
+        user_mock.check_password.return_value = True
+        user_mock.generate_auth_token.return_value = 'OTTTOKEN'
+        user_cls_mock.get_by_email.return_value = user_mock
+        resource = resources.LoginResource()
+        resource.post().should.be.equal({'token': 'OTTTOKEN', 'userId': 'USER-ID'})
+        g_mock.user.should.be.equal(user_mock)
+
+    @base.TestCase.mock.patch('app.resources.models.User')
+    @base.TestCase.mock.patch('app.resources.request')
+    @base.TestCase.mock.patch('app.resources.g')
+    def test_return_not_authorized_if_password_does_not_match(self, g_mock, request_mock, user_cls_mock):
+        request_mock.json = {'email': 'test@test.com', 'password': '1234'}
+        user_mock = self.mock.MagicMock()
+        user_mock.id = 'USER-ID'
+        user_mock.check_password.return_value = False
+        user_cls_mock.get_by_email.return_value = user_mock
+        resource = resources.LoginResource()
+        resource.post().should.be.equal(({'result': 'Not Authorized'}, 401))
+        g_mock.user.should.be.equal(user_mock)
+
+    @base.TestCase.mock.patch('app.resources.models.User')
+    @base.TestCase.mock.patch('app.resources.request')
+    @base.TestCase.mock.patch('app.resources.g')
+    def test_return_not_authorized_if_no_user_id_found(self, g_mock, request_mock, user_cls_mock):
+        request_mock.json = {'email': 'test@test.com', 'password': '1234'}
+        user_cls_mock.get_by_email.return_value = None
+        resource = resources.LoginResource()
+        resource.post().should.be.equal(({'result': 'Not Authorized'}, 401))
+        g_mock.user.should.be.none
 
 
 class ProjectsResourceTest(base.TestCase):

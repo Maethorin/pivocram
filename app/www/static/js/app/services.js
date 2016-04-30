@@ -22,6 +22,9 @@ angular.module('pivocram.services', [])
             this.update();
         };
     }])
+    // .factory('Login', ['$resource', function($resource) {
+    //     return $resource('{0}/api/login'.format([urlBackEnd]));
+    // }])
     .factory('Project', ['$resource', 'appConfig', function($resource, appConfig) {
         return $resource('{0}/api/projects/:projectId'.format([appConfig.backendURL]));
     }])

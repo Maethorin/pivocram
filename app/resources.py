@@ -4,7 +4,7 @@ from functools import wraps
 from flask import request, g, Response
 from flask_restful import Resource
 
-from app import pivocram, config as config_module
+from app import pivocram, models, config as config_module
 
 config = config_module.get_config()
 
@@ -26,6 +26,17 @@ class ResourceBase(Resource):
 
     def options(self, *args, **kwargs):
         return {'result': True}
+
+
+class LoginResource(ResourceBase):
+    def post(self):
+        try:
+            g.user = models.User.get_by_email(request.json['email'])
+            if g.user.check_password(request.json['password']):
+                return {'token': g.user.generate_auth_token(), 'userId': g.user.id}
+        except Exception:
+            pass
+        return {'result': 'Not Authorized'}, 401
 
 
 class StoryResource(ResourceBase):
