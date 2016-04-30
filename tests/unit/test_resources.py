@@ -4,6 +4,22 @@ from app import pivocram, resources
 
 
 class ResourceBaseTest(base.TestCase):
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user=None))
+    @base.TestCase.mock.patch('app.resources.Response')
+    def test_login_required_return_401_if_no_user(self, response_mock):
+        @resources.login_required
+        def required_login():
+            False.should.be.truthy
+        required_login()
+        response_mock.assert_called_with('{"result": "Not Authorized"}', 401, content_type='application/json')
+
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='User'))
+    def test_login_required_call_function_if_user(self):
+        @resources.login_required
+        def required_login():
+            return 'I WAS CALLED'
+        required_login().should.be.equal('I WAS CALLED')
+
     @base.TestCase.mock.patch('app.resources.request')
     def test_should_return_request_json_as_payload(self, request_mock):
         request_mock.json = 'PAYLOAD-JSON'
@@ -16,6 +32,7 @@ class ResourceBaseTest(base.TestCase):
 
 
 class ProjectsResourceTest(base.TestCase):
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='OneUser'))
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_list_of_projects_if_no_id_passed(self, class_mock):
         resource = resources.ProjectResource()
@@ -41,6 +58,7 @@ class StoriesResourceTest(base.TestCase):
             'url': 'https://www.pivotaltracker.com/story/show/{}'.format(story_id)
         }
 
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='User'))
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_list_of_stories_if_no_id_passed(self, class_mock):
         resource = resources.StoryResource()
@@ -88,6 +106,7 @@ class StoriesResourceTest(base.TestCase):
         })
         class_mock.assert_called_with(1122)
 
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='User'))
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_story_if_id_passed(self, class_mock):
         resource = resources.StoryResource()
@@ -96,6 +115,7 @@ class StoriesResourceTest(base.TestCase):
         resource.get(project_id=1122, story_id=1).should.be.equal('STORY')
         client_mock.get_story.assert_called_with(1)
 
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='User'))
     @base.TestCase.mock.patch('app.resources.request')
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_update_story_with_data_passed(self, class_mock, request_mock):
@@ -108,6 +128,7 @@ class StoriesResourceTest(base.TestCase):
 
 
 class TasksResourceTest(base.TestCase):
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='User'))
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_list_of_tasks_if_no_id_passed(self, class_mock):
         resource = resources.TaskResource()
@@ -117,6 +138,7 @@ class TasksResourceTest(base.TestCase):
         client_mock.get_story_tasks.assert_called_with(12)
         class_mock.assert_called_with(1122)
 
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='User'))
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_get_task_if_id_passed(self, class_mock):
         resource = resources.TaskResource()
@@ -125,6 +147,7 @@ class TasksResourceTest(base.TestCase):
         resource.get(project_id=1122, story_id=12, task_id=123).should.be.equal('STORY-TASK')
         client_mock.get_story_task.assert_called_with(12, 123)
 
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='User'))
     @base.TestCase.mock.patch('app.resources.request')
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
     def test_should_complete_task_on_update(self, class_mock, request_mock):

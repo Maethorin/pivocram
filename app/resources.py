@@ -1,11 +1,22 @@
 # -*- coding: utf-8 -*-
+from functools import wraps
 
-from flask import request
+from flask import request, g, Response
 from flask_restful import Resource
 
 from app import pivocram, config as config_module
 
 config = config_module.get_config()
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = getattr(g, 'user', None)
+        if user is None:
+            return Response('{"result": "Not Authorized"}', 401, content_type='application/json')
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 class ResourceBase(Resource):
@@ -18,10 +29,12 @@ class ResourceBase(Resource):
 
 
 class StoryResource(ResourceBase):
+    @login_required
     def put(self, project_id, story_id):
         client = pivocram.Client(project_id)
         return client.update_story(story_id, request.json)
 
+    @login_required
     def get(self, project_id, story_id=None):
         client = pivocram.Client(project_id)
         if story_id:
@@ -49,18 +62,21 @@ class StoryResource(ResourceBase):
 
 
 class TaskResource(ResourceBase):
+    @login_required
     def get(self, project_id, story_id, task_id=None):
         client = pivocram.Client(project_id)
         if task_id:
             return client.get_story_task(story_id, task_id)
         return client.get_story_tasks(story_id)
 
+    @login_required
     def put(self, project_id, story_id, task_id):
         client = pivocram.Client(project_id)
         return client.complete_story_task(story_id, task_id, request.json)
 
 
 class ProjectResource(ResourceBase):
+    @login_required
     def get(self):
         client = pivocram.Client()
         return client.get_projects()
