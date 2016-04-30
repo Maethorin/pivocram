@@ -1,5 +1,6 @@
 *.py[cod]
 .Python
+.k_coverage/
 .coverage
 .coverage.*
 .cache

@@ -23,12 +23,15 @@ module.exports = function(config) {
             "bower_components/bootstrap-sass/assets/javascripts/bootstrap.js",
             'app/www/static/js/app/**/*.js',
             'tests/js_unit/**/*.js',
-            'app/templates/**/*.html'
+            'app/www/templates/**/*.html'
         ],
-        autoWatch: true,
         frameworks: ['jasmine'],
         browsers: ['Chrome'],
-        reporters: ['coverage'],
+        reporters: ['progress'],
+        coverageReporter: {
+            type: 'lcov',
+            dir: '.k_coverage/'
+        },
         customLaunchers: {
            Chrome_travis_ci: {
                base: 'Chrome',
@@ -38,6 +41,7 @@ module.exports = function(config) {
     };
     if (process.env.TRAVIS) {
         configObj.browsers = ['Chrome_travis_ci'];
+        configObj.reporters = ['progress', 'coverage', 'coveralls'];
     }
     config.set(configObj);
 };
