@@ -1,6 +1,5 @@
 module.exports = function(config) {
     var configObj = {
-
         basePath: './',
         preprocessors: {
           'app/templates/**/*.html': ['ng-html2js'],
@@ -26,20 +25,10 @@ module.exports = function(config) {
             'tests/js_unit/**/*.js',
             'app/templates/**/*.html'
         ],
-
         autoWatch: true,
-
         frameworks: ['jasmine'],
-
-        // browsers: ['Chrome'],
-
-        plugins: [
-            // 'karma-chrome-launcher',
-            'karma-jasmine',
-            'karma-coverage',
-            'karma-ng-html2js-preprocessor'
-        ],
-        reporters: ['coverage', 'coveralls']
+        browsers: ['Chrome'],
+        reporters: ['coverage']
         // customLaunchers: {
         //    Chrome_travis_ci: {
         //        base: 'Chrome',
