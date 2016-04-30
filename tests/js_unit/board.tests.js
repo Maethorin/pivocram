@@ -1,8 +1,6 @@
 describe('Board module', function() {
-    var $route, appConfig, $controller, $rootScope, $httpBackend, Project, Story;
-    var $routeParams = {
-        projectId: 123
-    };
+    var $route, appConfig, $controller, $rootScope, $httpBackend, Project, Story, StoryTask;
+
     var qMock = {
         all: function() {
             return {
@@ -13,7 +11,7 @@ describe('Board module', function() {
         }
     };
     beforeEach(module('pivocram'));
-    beforeEach(inject(function(_$route_, _appConfig_, _$controller_, _$rootScope_, _$httpBackend_, _Project_, _Story_) {
+    beforeEach(inject(function(_$route_, _appConfig_, _$controller_, _$rootScope_, _$httpBackend_, _Project_, _Story_, _StoryTask_) {
         $route = _$route_;
         appConfig = _appConfig_;
         $controller = _$controller_;
@@ -21,6 +19,7 @@ describe('Board module', function() {
         $httpBackend = _$httpBackend_;
         Project = _Project_;
         Story = _Story_;
+        StoryTask = _StoryTask_;
     }));
     describe('Routes', function() {
         it('should have route to get boards', function() {
@@ -197,7 +196,31 @@ describe('Board module', function() {
             });
             it('should define points per column', function() {
                 expect($scope.pointsPerColumn).toEqual(pointsPerColumn);
-            })
+            });
+            describe('getting tasks', function() {
+                it('should define getTasks function on planned', function() {
+                    expect(iteration.stories['planned'][0].getTasks).toBeDefined();
+                });
+                it('should define getTasks function on started', function() {
+                    expect(iteration.stories['started'][0].getTasks).toBeDefined();
+                });
+                it('should not define getTasks function on finished', function() {
+                    expect(iteration.stories['finished'][0].getTasks).not.toBeDefined();
+                });
+                it('should call StoryTask resource', function() {
+                    var spyStoryTask = spyOn(StoryTask, 'query').and.returnValue([1, 2, 3]);
+                    iteration.stories['started'][0].getTasks();
+                    expect(spyStoryTask).toHaveBeenCalledWith({projectId: 123, storyId: 3}, jasmine.any(Function));
+                    expect(iteration.stories['started'][0].tasks).toEqual([1, 2, 3]);
+                });
+                it('should tasks loading to false when finihing load tasks', function() {
+                    $httpBackend.expect('GET', '{0}/api/projects/123/stories/3/tasks'.format([appConfig.backendURL])).respond(200, [1, 2, 3]);
+                    expect(iteration.stories['started'][0].taskLoading).toBeTruthy();
+                    iteration.stories['started'][0].getTasks();
+                    $httpBackend.flush();
+                    expect(iteration.stories['started'][0].taskLoading).toBeFalsy();
+                });
+            });
         });
         describe('dragging a story', function() {
             it('should set story dragged on drag', function() {

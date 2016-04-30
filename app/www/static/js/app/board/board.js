@@ -62,9 +62,8 @@ angular.module('pivocram.board', [])
                         story.taskLoading = true;
                         story.tasks = [];
                         story.getTasks = function() {
-                            var tasks = StoryTask.query({projectId: $routeParams.projectId, storyId: story.id}, function() {
+                            story.tasks = StoryTask.query({projectId: $routeParams.projectId, storyId: story.id}, function() {
                                 story.taskLoading = false;
-                                story.tasks = tasks;
                             });
                         };
                     }
