@@ -41,7 +41,7 @@ module.exports = function(config) {
     };
     if (process.env.TRAVIS) {
         configObj.browsers = ['Chrome_travis_ci'];
-        configObj.reporters = ['progress', 'coverage', 'coveralls'];
+        configObj.reporters = ['progress', 'coverage'];
     }
     config.set(configObj);
 };
