@@ -18,4 +18,5 @@ script:
   - ./node_modules/karma/bin/karma start --single-run
 
 after_success:
-  - coveralls
+  - coveralls-lcov -v -n .k_coverage/lcov.info > coverage.json
+  - coveralls --merge=coverage.json
