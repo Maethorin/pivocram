@@ -34,7 +34,7 @@ class LoginResource(ResourceBase):
             import models
             g.user = models.User.get_by_email(request.json['email'])
             if g.user.check_password(request.json['password']):
-                return {'token': g.user.generate_auth_token(), 'userId': g.user.id}
+                return {'token': g.user.generate_auth_token(), 'userName': g.user.name}
         except Exception:
             pass
         return {'result': 'Not Authorized'}, 401

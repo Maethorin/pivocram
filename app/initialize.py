@@ -70,6 +70,7 @@ def add_token_header(response):
     if user is not None:
         token = user.generate_auth_token()
         response.headers['XSRF-TOKEN'] = token.decode('ascii')
+        response.headers['USER-NAME'] = user.name
     return response
 
 

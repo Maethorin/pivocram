@@ -63,6 +63,12 @@ describe('App services', function() {
                 $httpBackend.flush();
                 expect(login.token).toBe('TOKEN');
             });
+            it('should call api/projects/:projectId when get project', function() {
+                $httpBackend.expect("GET", "{0}/api/projects/123".format([appConfig.backendURL])).respond(200, {project: 'project-1'});
+                var project = Project.get({"projectId": 123});
+                $httpBackend.flush();
+                expect(project.project).toBe('project-1');
+            });
         });
         describe('for projects', function() {
             it('should call api/projects when query projects', function() {

@@ -38,12 +38,12 @@ class LoginResourceTest(base.TestCase):
     def test_return_token_if_login_is_successfull(self, g_mock, request_mock, user_cls_mock):
         request_mock.json = {'email': 'test@test.com', 'password': '1234'}
         user_mock = self.mock.MagicMock()
-        user_mock.id = 'USER-ID'
+        user_mock.name = 'User Name'
         user_mock.check_password.return_value = True
         user_mock.generate_auth_token.return_value = 'OTTTOKEN'
         user_cls_mock.get_by_email.return_value = user_mock
         resource = resources.LoginResource()
-        resource.post().should.be.equal({'token': 'OTTTOKEN', 'userId': 'USER-ID'})
+        resource.post().should.be.equal({'token': 'OTTTOKEN', 'userName': 'User Name'})
         g_mock.user.should.be.equal(user_mock)
 
     @base.TestCase.mock.patch('app.models.User')

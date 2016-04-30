@@ -38,11 +38,12 @@ class InitializeTest(base.TestCase):
     @base.TestCase.mock.patch('app.initialize.g')
     def test_should_add_token_headers_in_reponse_when_g_have_an_user(self, g_mock):
         user_mock = self.mock.MagicMock()
+        user_mock.name = 'User Name'
         user_mock.generate_auth_token.return_value = 'GENERATED-TOKEN'
         g_mock.get.return_value = user_mock
         response = self.mock.MagicMock(headers={})
         result = initialize.add_token_header(response)
-        result.headers.should.be.equal({'XSRF-TOKEN': 'GENERATED-TOKEN'})
+        result.headers.should.be.equal({'XSRF-TOKEN': 'GENERATED-TOKEN', 'USER-NAME': 'User Name'})
 
     @base.TestCase.mock.patch('app.initialize.g')
     def test_should_remove_token_headers_in_response_when_g_doesnt_have_an_user(self, g_mock):
