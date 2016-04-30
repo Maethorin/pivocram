@@ -10,7 +10,8 @@ from mock import mock
 os.environ = {
     'APP_SETTINGS': 'app.config.TestingConfig',
     'SECRET_KEY': 'SECRET-KEY',
-    'PIVOTAL_TOKEN': 'TOKEN_PIVOTAL'
+    'PIVOTAL_TOKEN': 'TOKEN_PIVOTAL',
+    'DATABASE_URL': 'postgresql+psycopg2://pivocram:pivocram@localhost:5432/pivocram'
 }
 
 # test_app = Flask(__name__)

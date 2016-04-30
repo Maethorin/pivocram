@@ -1,6 +1,10 @@
 Flask-RESTful
-Flask-SQLAlchemy
 PyJWT
 gunicorn
 passlib
 requests
+
+Flask-SQLAlchemy
+alembic
+Flask-Migrate
+psycopg2

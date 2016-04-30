@@ -15,6 +15,7 @@ class Config(object):
     TESTING = False
     DEVELOPMENT = False
     CSRF_ENABLED = True
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     SECRET_KEY = os.environ['SECRET_KEY']
     PIVOTAL_TOKEN = ''
 
