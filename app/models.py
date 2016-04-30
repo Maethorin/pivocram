@@ -19,6 +19,7 @@ class User(db.Model):
     email = db.Column(db.String(), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     name = db.Column(db.String(), nullable=False)
+    pivotal_token = db.Column(db.String())
 
     @classmethod
     def get_by_email(cls, email):
