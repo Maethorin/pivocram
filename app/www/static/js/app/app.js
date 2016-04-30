@@ -26,6 +26,26 @@ function setBackendURL(location) {
     return backendURL;
 }
 
+function configApp($sceDelegateProvider, $httpProvider, appConfig) {
+    $sceDelegateProvider.resourceUrlWhitelist([
+        'self',
+        '{0}/**'.format([appConfig.backendURL])
+    ]);
+    $httpProvider.defaults.withCredentials = true;
+    $httpProvider.interceptors.push('updateToken');
+}
+
+function runApp($rootScope, appConfig, AuthService) {
+    AuthService.update();
+    $rootScope.referrer = null;
+    $rootScope.$on('$locationChangeSuccess', function(evt, absNewUrl, absOldUrl) {
+        if (absOldUrl && absOldUrl.indexOf('login') == -1) {
+            var completeURL = '{0}/#'.format([appConfig.backendURL]);
+            $rootScope.referrer = absOldUrl.replace(completeURL, '');
+        }
+    });
+}
+
 angular.module(
     'pivocram',
     [
@@ -64,18 +84,8 @@ angular.module(
         };
     }])
     .config(['$sceDelegateProvider', '$httpProvider', 'appConfig', function($sceDelegateProvider, $httpProvider, appConfig) {
-        $sceDelegateProvider.resourceUrlWhitelist([
-            'self',
-            '{0}/**'.format([appConfig.backendURL])
-        ]);
-        $httpProvider.defaults.withCredentials = true;
-        $httpProvider.interceptors.push('updateToken');
+        configApp($sceDelegateProvider, $httpProvider, appConfig);
     }])
-    .run(['$rootScope', function($rootScope) {
-        $rootScope.referrer = null;
-        $rootScope.$on('$locationChangeSuccess', function(evt, absNewUrl, absOldUrl) {
-            if (absOldUrl && absOldUrl.indexOf('login') == -1) {
-                $rootScope.referrer = absOldUrl;
-            }
-        });
+    .run(['$rootScope', 'appConfig', 'AuthService', function($rootScope, appConfig, AuthService) {
+        runApp($rootScope, appConfig, AuthService);
     }]);

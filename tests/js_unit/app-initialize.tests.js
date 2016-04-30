@@ -26,7 +26,89 @@ describe('General functions', function() {
             var location = {hostname: '127.0.0.1'};
             expect(setBackendURL(location)).toBe('http://localhost:5000')
         });
-    })
+    });
+    describe('configApp', function() {
+        var $sceDelegateProvider, $httpProvider, appConfig;
+        beforeEach(function() {
+            $sceDelegateProvider = {
+                whiteList: [],
+                resourceUrlWhitelist: function(whiteList) {
+                    this.whiteList = whiteList;
+                }
+            };
+            $httpProvider = {
+                defaults: {
+                    withCredentials: false
+                },
+                interceptors: []
+            };
+            appConfig = {
+                backendURL: 'back-end/url'
+            }
+        });
+        it('should define $sce app', function() {
+            configApp($sceDelegateProvider, $httpProvider, appConfig);
+            expect($sceDelegateProvider.whiteList).toEqual(['self', 'back-end/url/**']);
+        });
+        it('should define $httpProvider app withCredentials', function() {
+            configApp($sceDelegateProvider, $httpProvider, appConfig);
+            expect($httpProvider.defaults.withCredentials).toBeTruthy();
+        });
+        it('should define $httpProvider app interceptors', function() {
+            configApp($sceDelegateProvider, $httpProvider, appConfig);
+            expect($httpProvider.interceptors).toEqual(['updateToken']);
+        });
+    });
+    describe('runApp', function() {
+        var $rootScope, appConfig, AuthService;
+        beforeEach(function() {
+            $rootScope = {
+                name: null,
+                callback: null,
+                $on: function(name, callback) {
+                    this.name = name;
+                    this.callback = callback;
+                }
+            };
+            AuthService = {
+                updated: false,
+                update: function() {
+                    this.updated = true;
+                }
+            };
+            appConfig = {
+                backendURL: 'back-end/url'
+            }
+        });
+        it('should update AuthService', function() {
+            runApp($rootScope, appConfig, AuthService);
+            expect(AuthService.updated).toBeTruthy();
+        });
+        it('should set referrer', function() {
+            runApp($rootScope, appConfig, AuthService);
+            expect($rootScope.referrer).toBeDefined();
+            expect($rootScope.referrer).toBeNull();
+        });
+        it('should sign $locationChangeSuccess', function() {
+            runApp($rootScope, appConfig, AuthService);
+            expect($rootScope.name).toBe('$locationChangeSuccess');
+        });
+        it('should set referrer on change', function() {
+            runApp($rootScope, appConfig, AuthService);
+            $rootScope.callback(null, '', 'nice-url');
+            expect($rootScope.referrer).toBe('nice-url');
+        });
+        it('should not set referrer on url has login', function() {
+            runApp($rootScope, appConfig, AuthService);
+            $rootScope.callback(null, '', 'some-url-with-login');
+            expect($rootScope.referrer).toBeNull();
+        });
+        it('should not set referrer without backendURL', function() {
+            runApp($rootScope, appConfig, AuthService);
+            $rootScope.callback(null, '', '{0}/#/with-backend'.format([appConfig.backendURL]));
+            expect($rootScope.referrer).toBe('/with-backend');
+        });
+    });
 });
 
 describe('App common', function() {
