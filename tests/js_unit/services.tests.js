@@ -1,13 +1,14 @@
 describe('App services', function() {
-    var $httpBackend, $resource, appConfig, Project, Story, StoryTask;
+    var $httpBackend, $resource, appConfig, Project, Story, StoryTask, AuthService;
     beforeEach(module('pivocram'));
-    beforeEach(inject(function(_$httpBackend_, _$resource_, _appConfig_, _Project_, _Story_, _StoryTask_) {
+    beforeEach(inject(function(_$httpBackend_, _$resource_, _appConfig_, _Project_, _Story_, _StoryTask_, _AuthService_) {
         $httpBackend = _$httpBackend_;
         $resource = _$resource_;
         appConfig = _appConfig_;
         Project = _Project_;
         Story = _Story_;
         StoryTask = _StoryTask_;
+        AuthService = _AuthService_;
     }));
     describe('definitions', function() {
         it('should have resource to projects', function() {
@@ -18,6 +19,29 @@ describe('App services', function() {
         });
         it('should have resource to tasks', function() {
             expect(StoryTask).toBeDefined();
+        });
+    });
+    describe('Authentication', function() {
+        beforeEach(function() {
+            localStorage.removeItem('XSRF-TOKEN');
+            localStorage.removeItem('USER-NAME');
+        });
+        it('should set values in localStorage', function() {
+            expect(localStorage.getItem('XSRF-TOKEN')).toBeNull();
+            expect(localStorage.getItem('USER-NAME')).toBeNull();
+            AuthService.update('TOKEN', 123);
+            expect(localStorage.getItem('XSRF-TOKEN')).toBe('TOKEN');
+            expect(localStorage.getItem('USER-NAME')).toBe('123');
+        });
+        it('should have properties for token and user_id', function() {
+            AuthService.update('TOKEN', 123);
+            expect(AuthService.token).toBe('TOKEN');
+            expect(AuthService.userName).toBe('123');
+        });
+        it('should inform if user is logged based on token in localStorage', function() {
+            expect(AuthService.userIsLogged()).toBeFalsy();
+            localStorage.setItem('XSRF-TOKEN', 'TOKEN');
+            expect(AuthService.userIsLogged()).toBeTruthy();
         });
     });
     describe('resources', function() {
