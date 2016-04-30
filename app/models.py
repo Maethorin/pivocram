@@ -2,18 +2,27 @@
 from datetime import datetime, timedelta
 
 import jwt
+from passlib.apps import custom_app_context
 
 from app import config as config_module
+import database
+
+
+db = database.AppRepository.db
 
 config = config_module.get_config()
 
 
-class User(object):
-    id = 'USER-ID'
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    name = db.Column(db.String(), nullable=False)
 
-    def generate_auth_token(self, expiration=600):
-        return jwt.encode({'id': self.id, 'exp': datetime.utcnow() + timedelta(seconds=expiration)},
-                          config.SECRET_KEY, algorithm='HS256')
+    @classmethod
+    def get_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
 
     @classmethod
     def check_auth_token(cls, token):
@@ -23,4 +32,14 @@ class User(object):
             return None
         if not data.get('id', None):
             return None
-        return cls()
+        return cls.query.get(data['id'])
+
+    def hash_password(self, password):
+        self.password_hash = custom_app_context.encrypt(password)
+
+    def check_password(self, password):
+        return custom_app_context.verify(password, self.password_hash)
+
+    def generate_auth_token(self, expiration=600):
+        return jwt.encode({'id': self.id, 'exp': datetime.utcnow() + timedelta(seconds=expiration)},
+                          config.SECRET_KEY, algorithm='HS256')

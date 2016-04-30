@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import os
 
-from flask import Flask, send_from_directory, g, request, redirect
+from flask import Flask, send_from_directory, g, request
+from flask.ext.sqlalchemy import SQLAlchemy
 
-import api, models
+import api, database
 
 web_app = Flask(__name__, static_folder='www/static')
 web_app.config.from_object(os.environ['APP_SETTINGS'])
+database.AppRepository.db = SQLAlchemy(web_app)
 app_directory = os.path.join(os.getcwd(), 'app')
 www_directory = os.path.join(app_directory, 'www')
 mock_directory = os.path.join(app_directory, 'mocks')
@@ -26,6 +28,7 @@ def before_request():
     token = request.headers.get('XSRF-TOKEN', None)
     user = None
     if token:
+        import models
         user = models.User.check_auth_token(token)
     if user:
         g.user = user
