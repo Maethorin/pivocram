@@ -32,7 +32,7 @@ class ResourceBaseTest(base.TestCase):
 
 
 class LoginResourceTest(base.TestCase):
-    @base.TestCase.mock.patch('app.resources.models.User')
+    @base.TestCase.mock.patch('app.models.User')
     @base.TestCase.mock.patch('app.resources.request')
     @base.TestCase.mock.patch('app.resources.g')
     def test_return_token_if_login_is_successfull(self, g_mock, request_mock, user_cls_mock):
@@ -46,7 +46,7 @@ class LoginResourceTest(base.TestCase):
         resource.post().should.be.equal({'token': 'OTTTOKEN', 'userId': 'USER-ID'})
         g_mock.user.should.be.equal(user_mock)
 
-    @base.TestCase.mock.patch('app.resources.models.User')
+    @base.TestCase.mock.patch('app.models.User')
     @base.TestCase.mock.patch('app.resources.request')
     @base.TestCase.mock.patch('app.resources.g')
     def test_return_not_authorized_if_password_does_not_match(self, g_mock, request_mock, user_cls_mock):
@@ -59,7 +59,7 @@ class LoginResourceTest(base.TestCase):
         resource.post().should.be.equal(({'result': 'Not Authorized'}, 401))
         g_mock.user.should.be.equal(user_mock)
 
-    @base.TestCase.mock.patch('app.resources.models.User')
+    @base.TestCase.mock.patch('app.models.User')
     @base.TestCase.mock.patch('app.resources.request')
     @base.TestCase.mock.patch('app.resources.g')
     def test_return_not_authorized_if_no_user_id_found(self, g_mock, request_mock, user_cls_mock):

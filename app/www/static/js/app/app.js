@@ -33,6 +33,7 @@ angular.module(
         'ngResource',
         'ngDragDrop',
         'pivocram.services',
+        'pivocram.login',
         'pivocram.board'
     ])
     .constant('appConfig', {
@@ -62,18 +63,19 @@ angular.module(
             }
         };
     }])
-    .config(['$sceDelegateProvider', '$routeProvider', 'appConfig', function($sceDelegateProvider, $routeProvider, appConfig) {
+    .config(['$sceDelegateProvider', '$httpProvider', 'appConfig', function($sceDelegateProvider, $httpProvider, appConfig) {
         $sceDelegateProvider.resourceUrlWhitelist([
             'self',
             '{0}/**'.format([appConfig.backendURL])
         ]);
+        $httpProvider.defaults.withCredentials = true;
+        $httpProvider.interceptors.push('updateToken');
     }])
     .run(['$rootScope', function($rootScope) {
+        $rootScope.referrer = null;
         $rootScope.$on('$locationChangeSuccess', function(evt, absNewUrl, absOldUrl) {
-            $rootScope.referrer = absOldUrl;
+            if (absOldUrl && absOldUrl.indexOf('login') == -1) {
+                $rootScope.referrer = absOldUrl;
+            }
         });
     }]);
-
-$(function() {
-    $(".story .panel-heading").tooltip();
-});
