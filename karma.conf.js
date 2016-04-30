@@ -39,6 +39,7 @@ module.exports = function(config) {
             'karma-coverage',
             'karma-ng-html2js-preprocessor'
         ],
+        reporters: ['coverage', 'coveralls']
         // customLaunchers: {
         //    Chrome_travis_ci: {
         //        base: 'Chrome',

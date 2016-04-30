@@ -6,7 +6,7 @@ env:
 
 install:
   - sudo apt-get install phantomjs
-  - npm install karma karma-coverage karma-ng-html2js-preprocessor karma-jasmine jasmine-fixture jasmine-core phantomjs karma-phantomjs-launcher
+  - npm install karma karma-coverage karma-ng-html2js-preprocessor karma-jasmine jasmine-fixture jasmine-core phantomjs-prebuilt karma-phantomjs-launcher
   - pip install -r requirements.txt
   - pip install -r requirements_dev.txt --upgrade
 
