@@ -28,16 +28,16 @@ module.exports = function(config) {
         autoWatch: true,
         frameworks: ['jasmine'],
         browsers: ['Chrome'],
-        reporters: ['coverage']
-        // customLaunchers: {
-        //    Chrome_travis_ci: {
-        //        base: 'Chrome',
-        //        flags: ['--no-sandbox']
-        //    }
-        // }
+        reporters: ['coverage'],
+        customLaunchers: {
+           Chrome_travis_ci: {
+               base: 'Chrome',
+               flags: ['--no-sandbox']
+           }
+        }
     };
-    // if (process.env.TRAVIS) {
-    //     configObj.browsers = ['Chrome_travis_ci'];
-    // }
+    if (process.env.TRAVIS) {
+        configObj.browsers = ['Chrome_travis_ci'];
+    }
     config.set(configObj);
 };

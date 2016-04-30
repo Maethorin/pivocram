@@ -2,19 +2,20 @@ language: python
 python:
   - '2.7'
 env:
-  - SECRET_KEY=NOT_SO_SECRET APP_SETTINGS=app.config.TestingConfig
+  - SECRET_KEY=NOT_SO_SECRET APP_SETTINGS=app.config.TestingConfig CHROME_BIN=chromium-browser DISPLAY=:99.0
 
+before_install:
+  - sh -e /etc/init.d/xvfb start
 install:
-  - sudo apt-get install phantomjs
   - npm install
-  - npm install phantomjs-prebuilt karma-phantomjs-launcher
+  - bower install
   - pip install -r requirements.txt
   - pip install -r requirements_dev.txt --upgrade
 
 script:
   - rm -rf .coverage
   - make test
-  - ./node_modules/karma/bin/karma start --browsers PhantomJS --single-run
+  - ./node_modules/karma/bin/karma start --single-run
 
 after_success:
   - coveralls
