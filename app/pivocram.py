@@ -2,14 +2,12 @@
 import requests
 from app import config as module_config
 
-config = module_config.get_config()
-
 
 class Connect(object):
     PIVOTAL_URL = 'https://www.pivotaltracker.com/services/v5'
 
-    def __init__(self):
-        self.headers = {'X-TrackerToken': config.PIVOTAL_TOKEN}
+    def __init__(self, pivotal_token):
+        self.headers = {'X-TrackerToken': pivotal_token}
 
     def projects_url(self, project_id=None):
         return '{}/projects{}'.format(self.PIVOTAL_URL, '/{}'.format(project_id) if project_id else '')
@@ -59,8 +57,8 @@ class Connect(object):
 
 class Client(object):
 
-    def __init__(self, project_id=None):
-        self.connect = Connect()
+    def __init__(self, user, project_id=None):
+        self.connect = Connect(user.pivotal_token)
         self.project_id = project_id
         self._current_iteration_number = None
         self._current_iteration = None

@@ -12,7 +12,6 @@ class ConfigTest(base.TestCase):
         self.assertTrue(hasattr(config.Config, 'DEVELOPMENT'))
         self.assertTrue(hasattr(config.Config, 'CSRF_ENABLED'))
         self.assertTrue(hasattr(config.Config, 'SECRET_KEY'))
-        self.assertTrue(hasattr(config.Config, 'PIVOTAL_TOKEN'))
         self.assertTrue(hasattr(config.Config, 'SQLALCHEMY_DATABASE_URI'))
 
     def test_get_config(self):

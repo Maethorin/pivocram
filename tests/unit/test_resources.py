@@ -78,7 +78,7 @@ class ProjectsResourceTest(base.TestCase):
         client_mock = class_mock.return_value
         client_mock.get_projects.return_value = 'PROJECTS'
         resource.get().should.be.equal('PROJECTS')
-        class_mock.assert_called_with()
+        class_mock.assert_called_with('OneUser')
 
 
 class StoriesResourceTest(base.TestCase):
@@ -143,7 +143,7 @@ class StoriesResourceTest(base.TestCase):
                 ]
             }
         })
-        class_mock.assert_called_with(1122)
+        class_mock.assert_called_with('User', 1122)
 
     @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='User'))
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
@@ -164,6 +164,7 @@ class StoriesResourceTest(base.TestCase):
         client_mock.update_story.return_value = 'UPDATED'
         resource.put(project_id=1122, story_id=1).should.be.equal('UPDATED')
         client_mock.update_story.assert_called_with(1, {'data': 'value'})
+        class_mock.assert_called_with('User', 1122)
 
 
 class TasksResourceTest(base.TestCase):
@@ -175,7 +176,7 @@ class TasksResourceTest(base.TestCase):
         client_mock.get_story_tasks.return_value = 'STORIES-TASKS'
         resource.get(project_id=1122, story_id=12).should.be.equal('STORIES-TASKS')
         client_mock.get_story_tasks.assert_called_with(12)
-        class_mock.assert_called_with(1122)
+        class_mock.assert_called_with('User', 1122)
 
     @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='User'))
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
@@ -196,3 +197,4 @@ class TasksResourceTest(base.TestCase):
         client_mock.complete_story_task.return_value = 'completed'
         resource.put(project_id=1122, story_id=12, task_id=123).should.be.equal('completed')
         client_mock.complete_story_task.assert_called_with(12, 123, {'complete': True})
+        class_mock.assert_called_with('User', 1122)

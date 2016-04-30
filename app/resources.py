@@ -43,12 +43,12 @@ class LoginResource(ResourceBase):
 class StoryResource(ResourceBase):
     @login_required
     def put(self, project_id, story_id):
-        client = pivocram.Client(project_id)
+        client = pivocram.Client(g.user, project_id=project_id)
         return client.update_story(story_id, request.json)
 
     @login_required
     def get(self, project_id, story_id=None):
-        client = pivocram.Client(project_id)
+        client = pivocram.Client(g.user, project_id=project_id)
         if story_id:
             return client.get_story(story_id)
         current_iteration = client.current_iteration
@@ -76,19 +76,19 @@ class StoryResource(ResourceBase):
 class TaskResource(ResourceBase):
     @login_required
     def get(self, project_id, story_id, task_id=None):
-        client = pivocram.Client(project_id)
+        client = pivocram.Client(g.user, project_id=project_id)
         if task_id:
             return client.get_story_task(story_id, task_id)
         return client.get_story_tasks(story_id)
 
     @login_required
     def put(self, project_id, story_id, task_id):
-        client = pivocram.Client(project_id)
+        client = pivocram.Client(g.user, project_id=project_id)
         return client.complete_story_task(story_id, task_id, request.json)
 
 
 class ProjectResource(ResourceBase):
     @login_required
     def get(self):
-        client = pivocram.Client()
+        client = pivocram.Client(g.user)
         return client.get_projects()

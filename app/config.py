@@ -17,7 +17,6 @@ class Config(object):
     CSRF_ENABLED = True
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     SECRET_KEY = os.environ['SECRET_KEY']
-    PIVOTAL_TOKEN = ''
 
 
 class ProductionConfig(Config):
@@ -40,7 +39,6 @@ class DevelopmentConfig(Config):
     """
     DEVELOPMENT = True
     DEBUG = True
-    PIVOTAL_TOKEN = os.environ['PIVOTAL_TOKEN']
 
 
 class TestingConfig(Config):
@@ -49,8 +47,6 @@ class TestingConfig(Config):
     """
     TESTING = True
     KEY_ON_TEST = 'KEY ON TEST'
-    PIVOTAL_TOKEN = 'PIVOTAL_TEST_TOKEN'
-    PIVOTAL_PROJECT_ID = 1234
 
 
 class ConfigClassNotFound(Exception):

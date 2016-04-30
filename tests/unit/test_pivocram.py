@@ -5,7 +5,7 @@ from app import pivocram
 
 class PivocramConnetcTest(base.TestCase):
     def setUp(self):
-        self.connect = pivocram.Connect()
+        self.connect = pivocram.Connect('PIVOTAL_TEST_TOKEN')
 
     def test_should_have_the_pivotal_api_url(self):
         self.connect.PIVOTAL_URL.should.be.equal('https://www.pivotaltracker.com/services/v5')
@@ -92,7 +92,9 @@ class PivocramClientTest(base.TestCase):
     project_mock = {"current_iteration_number": 1}
 
     def setUp(self):
-        self.client = pivocram.Client(project_id='PROJECT-ID')
+        user = self.mock.MagicMock()
+        user.pivotal_token = 'PIVOTAL_TEST_TOKEN'
+        self.client = pivocram.Client(user, project_id='PROJECT-ID')
 
     def test_should_have_connect_attribute(self):
         self.assertTrue(isinstance(self.client.connect, pivocram.Connect))
