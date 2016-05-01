@@ -12,12 +12,18 @@ describe('Login module', function() {
         Login = _Login_;
     }));
     describe('Routes', function() {
-        it('should have route to login age', function() {
+        it('should have route to login', function() {
             expect($route.routes['/login']).toBeDefined();
         });
-        it('should have configuration for boards route', function() {
+        it('should have route to logout', function() {
+            expect($route.routes['/logout']).toBeDefined();
+        });
+        it('should have configuration for login route', function() {
             expect($route.routes['/login'].controller).toBe('LoginController');
             expect($route.routes['/login'].templateUrl).toBe('/templates/login.html');
+        });
+        it('should have configuration for logout route', function() {
+            expect($route.routes['/logout'].controller).toBe('LogoutController');
         });
     });
     describe('Initializing Login', function() {
@@ -94,6 +100,21 @@ describe('Login module', function() {
             loginSuccess = false;
             $scope.logingIn();
             expect($scope.loginFail).toBeTruthy();
+        });
+    });
+    describe('Initializing Logout', function() {
+        var $scope, locationSpy;
+        beforeEach(function() {
+            $scope = $rootScope.$new();
+            AuthService.update('token', 'user');
+            locationSpy = spyOn($location, 'path');
+            $controller('LogoutController')
+        });
+        it('should clear authetication', function() {
+            expect(AuthService.userIsLogged()).toBeFalsy();
+        });
+        it('should redirect to home', function() {
+            expect(locationSpy).toHaveBeenCalledWith('/login');
         });
     });
 });

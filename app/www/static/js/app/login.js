@@ -6,6 +6,10 @@ angular.module('pivocram.login', ['ngRoute'])
             .when('/login', {
                 templateUrl: '/templates/login.html',
                 controller: 'LoginController'
+            })
+            .when('/logout', {
+                templateUrl: '/templates/login.html',
+                controller: 'LogoutController'
             });
     }])
     .controller("LoginController", ['$rootScope', '$scope', '$location', 'Login', 'AuthService', function($rootScope, $scope, $location, Login, AuthService) {
@@ -33,4 +37,8 @@ angular.module('pivocram.login', ['ngRoute'])
                 }
             );
         };
+    }])
+    .controller("LogoutController", ['AuthService', '$location', function(AuthService, $location) {
+        AuthService.clear();
+        $location.path('/login');
     }]);
