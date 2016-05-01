@@ -65,3 +65,11 @@ class User(db.Model):
     def generate_auth_token(self, expiration=600):
         return jwt.encode({'id': self.id, 'exp': datetime.utcnow() + timedelta(seconds=expiration)},
                           config.SECRET_KEY, algorithm='HS256')
+
+    def update(self, user_data):
+        if 'pivotal_token' in user_data:
+            self.pivotal_token = user_data['pivotal_token']
+        if 'password' in user_data:
+            self.hash_password(user_data['password'])
+        db.session.add(self)
+        db.session.commit()

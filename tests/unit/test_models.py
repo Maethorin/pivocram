@@ -42,7 +42,6 @@ class UserTest(base.TestCase):
         query_mock.get.assert_called_with(123)
         user.should.be.equal('USER-123')
 
-
     @base.TestCase.mock.patch('app.models.custom_app_context')
     def test_user_should_hash_password(self, hasher_mock):
         hasher_mock.encrypt.return_value = 'HASSSHED'
@@ -122,7 +121,7 @@ class UserTest(base.TestCase):
 
     @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
     @base.TestCase.mock.patch('app.models.db.session')
-    def test_should_add_user_indb_session(self, session_mock):
+    def test_should_add_user_in_db_session_when_creating(self, session_mock):
         user = models.User.create(self.user_dict)
         session_mock.add.assert_called_with(user)
 
@@ -143,6 +142,50 @@ class UserTest(base.TestCase):
 
     @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
     @base.TestCase.mock.patch('app.models.db.session')
-    def test_should_commit(self, session_mock):
+    def test_should_commit_when_creating(self, session_mock):
         models.User.create(self.user_dict)
+        session_mock.commit.assert_called_with()
+
+    @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.custom_app_context')
+    def test_should_update_password(self, hasher_mock):
+        hasher_mock.encrypt.return_value = 'NEW#HASHED'
+        user = models.User()
+        user.update({'password': '1234', 'pivotal_token': 'NEW-TOKEN'})
+        hasher_mock.encrypt.assert_called_with('1234')
+        user.password_hash.should.be.equal('NEW#HASHED')
+
+    @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    def test_should_update_pivotal_token(self):
+        user = models.User()
+        user.update({'password': '1234', 'pivotal_token': 'NEW-TOKEN'})
+        user.pivotal_token.should.be.equal('NEW-TOKEN')
+
+    @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    def test_should_possible_update_only_password(self):
+        user = models.User()
+        user.update({'password': '1234'})
+        user.password_hash.should_not.be.none
+
+    @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    def test_should_be_possible_update_only_pivotal_token(self):
+        user = models.User()
+        user.update({'pivotal_token': 'NEW-TOKEN'})
+        user.pivotal_token.should.be.equal('NEW-TOKEN')
+
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.db.session')
+    def test_should_add_user_in_db_session_when_updating(self, session_mock):
+        user = models.User()
+        user.update({'pivotal_token': 'NEW-TOKEN'})
+        session_mock.add.assert_called_with(user)
+
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.db.session')
+    def test_should_commit_when_updating(self, session_mock):
+        user = models.User()
+        user.update({'pivotal_token': 'NEW-TOKEN'})
         session_mock.commit.assert_called_with()
