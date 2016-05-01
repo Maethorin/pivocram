@@ -40,6 +40,10 @@ class LoginResource(ResourceBase):
         return {'result': 'Not Authorized'}, 401
 
 
+class UserResource(ResourceBase):
+    pass
+
+
 class StoryResource(ResourceBase):
     @login_required
     def put(self, project_id, story_id):

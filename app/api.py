@@ -15,6 +15,9 @@ def create_api(app):
     api = Api(app)
     api.add_resource(resources.LoginResource,
                      '/api/login')
+    api.add_resource(resources.UserResource,
+                     '/api/user',
+                     '/api/user/<int:user_id>')
     api.add_resource(resources.ProjectResource,
                      '/api/projects')
     api.add_resource(resources.StoryResource,

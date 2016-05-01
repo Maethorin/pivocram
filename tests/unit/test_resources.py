@@ -70,6 +70,13 @@ class LoginResourceTest(base.TestCase):
         g_mock.user.should.be.none
 
 
+# class UserResourceTest(base.TestCase):
+#     def test_should_get_list_of_projects_if_no_id_passed(self, class_mock):
+#         resource = resources.UserResource()
+#         resource.get().should.be.equal('PROJECTS')
+#         class_mock.assert_called_with('OneUser')
+
+
 class ProjectsResourceTest(base.TestCase):
     @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='OneUser'))
     @base.TestCase.mock.patch('app.resources.pivocram.Client', spec=True)
