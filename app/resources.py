@@ -41,7 +41,10 @@ class LoginResource(ResourceBase):
 
 
 class UserResource(ResourceBase):
-    pass
+    @login_required
+    def post(self):
+        import models
+        return models.User.create(request.json).to_dict()
 
 
 class StoryResource(ResourceBase):

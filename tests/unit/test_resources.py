@@ -70,11 +70,28 @@ class LoginResourceTest(base.TestCase):
         g_mock.user.should.be.none
 
 
-# class UserResourceTest(base.TestCase):
-#     def test_should_get_list_of_projects_if_no_id_passed(self, class_mock):
-#         resource = resources.UserResource()
-#         resource.get().should.be.equal('PROJECTS')
-#         class_mock.assert_called_with('OneUser')
+class UserResourceTest(base.TestCase):
+    @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.User')
+    @base.TestCase.mock.patch('app.resources.request')
+    def test_should_create_user_in_post(self, request_mock, user_cls):
+        request_mock.json = {
+            'email': 'test@user.com',
+            'name': 'User Name',
+            'password': '1234',
+            'pivotal_token': 'TOOKEN'
+        }
+        user = self.mock.MagicMock()
+        user.to_dict.return_value = {
+            'email': 'test@user.com',
+            'name': 'User Name',
+        }
+        user_cls.create.return_value = user
+        resource = resources.UserResource()
+        resource.post().should.be.equal({
+            'email': 'test@user.com',
+            'name': 'User Name',
+        })
 
 
 class ProjectsResourceTest(base.TestCase):
@@ -89,8 +106,6 @@ class ProjectsResourceTest(base.TestCase):
 
 
 class StoriesResourceTest(base.TestCase):
-    # accepted, delivered, finished, started, rejected, planned, unstarted, unscheduled
-
     def create_mock_story(self, story_id, state='planned', story_type='feature', estimate=2):
         return {
             'current_state': state,
