@@ -15,9 +15,13 @@ mock_directory = os.path.join(app_directory, 'mocks')
 
 api.create_api(web_app)
 
-DOMAIN = 'https://pivocram.herokuapp.com'
-if web_app.config['DEVELOPMENT']:
-    DOMAIN = 'http://127.0.0.1:8000'
+
+def set_domain():
+    if web_app.config['DEVELOPMENT']:
+        return 'http://127.0.0.1:8000'
+    return 'https://pivocram.herokuapp.com'
+
+DOMAIN = set_domain()
 
 
 @web_app.before_request

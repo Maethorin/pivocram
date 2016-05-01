@@ -9,6 +9,16 @@ class InitializeTest(base.TestCase):
         initialize.run()
         web_app_mock.run.assert_called_with(debug=True, host='0.0.0.0', port=5000)
 
+    @base.TestCase.mock.patch('app.initialize.web_app')
+    def test_should_set_domain_with_default(self, web_app_mock):
+        web_app_mock.config = {'DEVELOPMENT': False}
+        initialize.set_domain().should.be.equal('https://pivocram.herokuapp.com')
+
+    @base.TestCase.mock.patch('app.initialize.web_app')
+    def test_should_set_domain_local_if_development(self, web_app_mock):
+        web_app_mock.config = {'DEVELOPMENT': True}
+        initialize.set_domain().should.be.equal('http://127.0.0.1:8000')
+
     @base.TestCase.mock.patch('app.models.User')
     @base.TestCase.mock.patch('app.initialize.request')
     @base.TestCase.mock.patch('app.initialize.g')
