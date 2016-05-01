@@ -19,5 +19,6 @@ script:
   - ./node_modules/karma/bin/karma start --single-run
 
 after_success:
-  - OUTPUT="$(ls .k_coverage)" && coveralls-lcov -v -n .k_coverage/$OUTPUT/lcov.info > coverage.json
+  - ls .k_coverage
+#  - OUTPUT="$(ls .k_coverage)" && coveralls-lcov -v -n `.k_coverage/${OUTPUT}/lcov.info` > coverage.json
   - coveralls --merge=coverage.json
