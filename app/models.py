@@ -46,6 +46,13 @@ class User(db.Model):
             return None
         return cls.query.get(data['id'])
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'email': self.email,
+            'pivotal_token': self.pivotal_token
+        }
+
     def hash_password(self, password):
         self.password_hash = custom_app_context.encrypt(password)
 

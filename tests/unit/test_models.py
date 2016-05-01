@@ -31,6 +31,10 @@ class UserTest(base.TestCase):
     def test_user_must_name_hash_field(self):
         isinstance(models.User.name, attributes.InstrumentedAttribute).should.be.truthy
 
+    def test_should_return_as_dict(self):
+        user = models.User(name='User Name', email='test@user.com', pivotal_token='TOKEN')
+        user.to_dict().should.be.equal({'email': 'test@user.com', 'name': 'User Name', 'pivotal_token': 'TOKEN'})
+
     @base.TestCase.mock.patch('app.models.custom_app_context')
     def test_user_should_hash_password(self, hasher_mock):
         hasher_mock.encrypt.return_value = 'HASSSHED'
