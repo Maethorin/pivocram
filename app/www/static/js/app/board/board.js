@@ -77,8 +77,9 @@ angular.module('pivocram.board', [])
                 for (var dayNumber = start.getDate(); dayNumber <= days; dayNumber++) {
                     start.setDate(start.getDate() + 1);
                     if (start.getDay() != 0 && start.getDay() != 6) {
-                        var passed = $scope.today.getDate() > start.getDate() && $scope.today.getMonth() == start.getMonth();
-                        $scope.devDays.push({id: dayNumber, day: start.getDate(), points: 0, passed: passed});
+                        var passed = $scope.today.getMonth() > start.getMonth() || ($scope.today.getDate() > start.getDate() && $scope.today.getMonth() == start.getMonth());
+                        var isToday = $scope.today.getMonth() == start.getMonth() && $scope.today.getDate() == start.getDate();
+                        $scope.devDays.push({id: dayNumber, day: start.getDate(), points: 0, passed: passed, isToday: isToday});
                     }
                 }
 

@@ -156,7 +156,7 @@ describe('Board module', function() {
         describe('loading stories', function() {
             beforeEach(function() {
                 $scope.iteration = iteration;
-                $scope.today = new Date(2016, 3, 27);
+                $scope.today = new Date(2016, 4, 3);
                 $scope.updateStoryData();
             });
             it('should define that story has task if it was planned', function() {
@@ -180,18 +180,36 @@ describe('Board module', function() {
             it('should fill estimates per column', function() {
                 expect($scope.estimates).toEqual(estimates);
             });
-            it('should define dev days', function() {
+            it('should define dev days if in same month', function() {
+                $scope.today = new Date(2016, 3, 27);
+                $scope.updateStoryData();
                 expect($scope.devDays).toEqual([
-                    { id: 24, day: 25, points: 1.8, passed: true },
-                    { id: 25, day: 26, points: 1.8, passed: true },
-                    { id: 26, day: 27, points: 1.8, passed: false },
-                    { id: 27, day: 28, points: 1.8, passed: false },
-                    { id: 28, day: 29, points: 1.8, passed: false },
-                    { id: 31, day: 2, points: 1.8, passed: false },
-                    { id: 32, day: 3, points: 1.8, passed: false },
-                    { id: 33, day: 4, points: 1.8, passed: false },
-                    { id: 34, day: 5, points: 1.8, passed: false },
-                    { id: 35, day: 6, points: 1.8, passed: false }
+                    { id: 24, day: 25, points: 1.8, passed: true, isToday: false },
+                    { id: 25, day: 26, points: 1.8, passed: true, isToday: false },
+                    { id: 26, day: 27, points: 1.8, passed: false, isToday: true },
+                    { id: 27, day: 28, points: 1.8, passed: false, isToday: false },
+                    { id: 28, day: 29, points: 1.8, passed: false, isToday: false },
+                    { id: 31, day: 2, points: 1.8, passed: false, isToday: false },
+                    { id: 32, day: 3, points: 1.8, passed: false, isToday: false },
+                    { id: 33, day: 4, points: 1.8, passed: false, isToday: false },
+                    { id: 34, day: 5, points: 1.8, passed: false, isToday: false },
+                    { id: 35, day: 6, points: 1.8, passed: false, isToday: false }
+                ]);
+            });
+            it('should define dev days if in different month', function() {
+                $scope.today = new Date(2016, 4, 1);
+                $scope.updateStoryData();
+                expect($scope.devDays).toEqual([
+                    { id: 24, day: 25, points: 1.8, passed: true, isToday: false },
+                    { id: 25, day: 26, points: 1.8, passed: true, isToday: false },
+                    { id: 26, day: 27, points: 1.8, passed: true, isToday: false },
+                    { id: 27, day: 28, points: 1.8, passed: true, isToday: false },
+                    { id: 28, day: 29, points: 1.8, passed: true, isToday: false },
+                    { id: 31, day: 2, points: 1.8, passed: false, isToday: false },
+                    { id: 32, day: 3, points: 1.8, passed: false, isToday: false },
+                    { id: 33, day: 4, points: 1.8, passed: false, isToday: false },
+                    { id: 34, day: 5, points: 1.8, passed: false, isToday: false },
+                    { id: 35, day: 6, points: 1.8, passed: false, isToday: false }
                 ]);
             });
             it('should define points per column', function() {

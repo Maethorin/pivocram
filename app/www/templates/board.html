@@ -10,7 +10,7 @@
                         <span class="points" ng-class="columnPoint.column" ng-repeat="columnPoint in pointsPerColumn">{{columnPoint.point}}</span>
                     </div>
                     <div class="col-md-12">
-                        <span class="day" ng-style="{'width': devDay.points * 23 + 'px'}" ng-class="{'passed': devDay.passed}" ng-repeat="devDay in devDays">{{devDay.day}}</span>
+                        <span class="day" ng-style="{'width': devDay.points * 23 + 'px'}" ng-class="{'passed': devDay.passed, 'is-today': devDay.isToday}" ng-repeat="devDay in devDays">{{devDay.day}}</span>
                     </div>
                 </div>
             </div>
