@@ -29,9 +29,27 @@ Install requirements using pip
 
     $ pip install -r requirements.txt
 
-Set the system environments variables in the `.env` file located in the root of this project. The PIVOTAL_TOKEN can be obtained in the dashboard of [Pivotal Tracker, https://www.pivotaltracker.com/] in the account that hold the projects to be showed in Pivocram.
+Set the system environments variables in the `.env` file located in the root of this project.
 
-After everything installed, run the app
+Create DataBase
+
+    $ sudo su postgres
+    $ psql
+    $ CREATE ROLE pivocram SUPERUSER LOGIN PASSWORD 'pivocram';
+    $ CREATE DATABASE pivocram;
+    $ ALTER DATABASE pivocram OWNER TO pivocram;
+
+Running migrations:
+
+    $ python manage.py db upgrade
+
+For this moment, you will need to manually add an user to the database. To generate o password hash, use a Python Console and:
+
+    $ python
+    $ from passlib.apps import custom_app_context
+    $ custom_app_context.encrypt('your-password')
+
+After everything installed and the user created in DB, run the app
 
     $ python run.py
 
