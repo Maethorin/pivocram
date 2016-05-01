@@ -34,6 +34,34 @@
         </div>
         <div class="col-md-2"></div>
     </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Change Password</div>
+                <form name="formPassword" class="form-horizontal" ng-submit="changePassword()" novalidate>
+                    <div class="panel-body">
+                        <div class="alert alert-danger" ng-show="changePasswordFail"><strong>Error:</strong> {{errorMessage}}</div>
+                        <div class="alert alert-success" ng-show="changePasswordComplete"><strong>Success:</strong> Saved!</div>
+                        <div class="form-group has-feedback formInput">
+                            <label for="password" class="col-sm-3 control-label">Password: <i class="fa fa-asterisk"></i></label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" id="password" name="password" ng-model="password.new" required />
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback formInput">
+                            <label for="password" class="col-sm-3 control-label">Confirm Password: <i class="fa fa-asterisk"></i></label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" ng-model="password.confirm" required password-match />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer cnage-password-button">
+                        <button type="submit" class="btn btn-success col-sm-4">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
 </div>
-
-ac0e9674cd13c9abe24b1fe9df1423fc
