@@ -36,9 +36,15 @@ class ResourceBaseTest(base.TestCase):
 
     @base.TestCase.mock.patch('app.resources.request')
     def test_should_return_request_json_as_payload(self, request_mock):
-        request_mock.json = 'PAYLOAD-JSON'
+        request_mock.json = {'one': 'One', 'two': 2}
         base_resource = resources.ResourceBase()
-        base_resource.payload.should.be.equal('PAYLOAD-JSON')
+        base_resource.payload.should.be.equal({'one': 'One', 'two': 2})
+
+    @base.TestCase.mock.patch('app.resources.request')
+    def test_should_snake_case_payload(self, request_mock):
+        request_mock.json = {'oneThing': 'One', 'twoThings': 2}
+        base_resource = resources.ResourceBase()
+        base_resource.payload.should.be.equal({'one_thing': 'One', 'two_things': 2})
 
     def test_should_have_option_respond_true(self):
         base_resource = resources.ResourceBase()

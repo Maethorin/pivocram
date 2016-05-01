@@ -38,7 +38,7 @@ def login_required(f):
 class ResourceBase(Resource):
     @property
     def payload(self):
-        return request.json
+        return {camel_to_snake(key): value for key, value in request.json.iteritems()}
 
     def options(self, *args, **kwargs):
         return {'result': True}
