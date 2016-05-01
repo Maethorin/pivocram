@@ -54,6 +54,7 @@ angular.module(
         'ngDragDrop',
         'pivocram.services',
         'pivocram.login',
+        'pivocram.user',
         'pivocram.board'
     ])
     .constant('appConfig', {
