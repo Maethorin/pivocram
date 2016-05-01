@@ -27,7 +27,6 @@ class User(db.Model):
         db.session.add(user)
         user.name = user_data['name']
         user.email = user_data['email']
-        user.pivotal_token = user_data['pivotal_token']
         user.hash_password(user_data['password'])
         db.session.commit()
         return user

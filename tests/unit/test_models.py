@@ -124,7 +124,6 @@ class UserTest(base.TestCase):
         user = models.User.create(self.user_dict)
         user.email.should.be.equal(self.user_dict['email'])
         user.name.should.be.equal(self.user_dict['name'])
-        user.pivotal_token.should.be.equal(self.user_dict['pivotal_token'])
 
     @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
     @base.TestCase.mock.patch('app.models.custom_app_context')

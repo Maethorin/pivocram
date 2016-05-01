@@ -78,8 +78,7 @@ class UserResourceTest(base.TestCase):
         request_mock.json = {
             'email': 'test@user.com',
             'name': 'User Name',
-            'password': '1234',
-            'pivotal_token': 'TOOKEN'
+            'password': '1234'
         }
         user = self.mock.MagicMock()
         user.to_dict.return_value = {
