@@ -25,7 +25,7 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li ng-if="!userLogged"><a href="/#/login">LOGIN</a></li>
                             <li class="dropdown" ng-if="userLogged">
-                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Olá User!<span class="caret"></span></a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Olá {{userName}}!<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="/#/logout">Logout</a></li>
                                 </ul>

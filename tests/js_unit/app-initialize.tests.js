@@ -112,11 +112,12 @@ describe('General functions', function() {
 });
 
 describe('App common', function() {
-    var $location, $sceDelegate, appConfig, AuthService, updateToken;
+    var $location, $sceDelegate, $rootScope, appConfig, AuthService, updateToken;
     beforeEach(module('pivocram'));
-    beforeEach(inject(function(_$location_, _$sceDelegate_, _appConfig_, _AuthService_, _updateToken_) {
+    beforeEach(inject(function(_$location_, _$sceDelegate_, _$rootScope_, _appConfig_, _AuthService_, _updateToken_) {
         $location = _$location_;
         $sceDelegate = _$sceDelegate_;
+        $rootScope = _$rootScope_;
         appConfig = _appConfig_;
         AuthService = _AuthService_;
         updateToken = _updateToken_;
@@ -142,6 +143,22 @@ describe('App common', function() {
             };
             updateToken.response(response);
             expect(authSpy).toHaveBeenCalledWith('TOOOOOKEEEN', 'User Name')
+        });
+        it('should set $rootScope variables', function() {
+            spyOn(AuthService, 'update');
+            spyOn(AuthService, 'userIsLogged').and.returnValue(true);
+            AuthService.userName = 'User Name';
+            var response = {
+                headers: function() {
+                    return {
+                        'XSRF-TOKEN': 'TOOOOOKEEEN',
+                        'USER-NAME': 'User Name'
+                    }
+                }
+            };
+            updateToken.response(response);
+            expect($rootScope.userLogged).toBeTruthy();
+            expect($rootScope.userName).toBe('User Name')
         });
         it('should clear AuthService data if response status code is 401', function() {
             var authSpy = spyOn(AuthService, 'clear');

@@ -59,13 +59,15 @@ angular.module(
     .constant('appConfig', {
         'backendURL': setBackendURL(window.location)
     })
-    .factory('updateToken', ['AuthService', '$location', '$q', function(AuthService, $location, $q) {
+    .factory('updateToken', ['AuthService', '$rootScope', '$location', '$q', function(AuthService, $rootScope, $location, $q) {
         return {
             response: function(response) {
                 var headers = response.headers();
                 if (headers['XSRF-TOKEN']) {
                     AuthService.update(headers['XSRF-TOKEN'], headers['USER-NAME'])
                 }
+                $rootScope.userLogged = AuthService.userIsLogged();
+                $rootScope.userName = AuthService.userName;
                 return response;
             },
             responseError: function(response) {
