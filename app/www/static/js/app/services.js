@@ -25,6 +25,9 @@ angular.module('pivocram.services', [])
     .factory('Login', ['$resource', 'appConfig', function($resource, appConfig) {
         return $resource('{0}/api/login'.format([appConfig.backendURL]));
     }])
+    .factory('User', ['$resource', 'appConfig', function($resource, appConfig) {
+        return $resource('{0}/api/me'.format([appConfig.backendURL]));
+    }])
     .factory('Project', ['$resource', 'appConfig', function($resource, appConfig) {
         return $resource('{0}/api/projects/:projectId'.format([appConfig.backendURL]));
     }])

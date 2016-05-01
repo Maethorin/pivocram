@@ -1,11 +1,12 @@
 describe('App services', function() {
-    var $httpBackend, $resource, appConfig, Login, Project, Story, StoryTask, AuthService;
+    var $httpBackend, $resource, appConfig, Login, User, Project, Story, StoryTask, AuthService;
     beforeEach(module('pivocram'));
-    beforeEach(inject(function(_$httpBackend_, _$resource_, _appConfig_, _Login_, _Project_, _Story_, _StoryTask_, _AuthService_) {
+    beforeEach(inject(function(_$httpBackend_, _$resource_, _appConfig_, _Login_, _User_, _Project_, _Story_, _StoryTask_, _AuthService_) {
         $httpBackend = _$httpBackend_;
         $resource = _$resource_;
         appConfig = _appConfig_;
         Login = _Login_;
+        User = _User_;
         Project = _Project_;
         Story = _Story_;
         StoryTask = _StoryTask_;
@@ -14,6 +15,9 @@ describe('App services', function() {
     describe('definitions', function() {
         it('should have resource to login', function() {
             expect(Login).toBeDefined();
+        });
+        it('should have resource to user', function() {
+            expect(User).toBeDefined();
         });
         it('should have resource to projects', function() {
             expect(Project).toBeDefined();
@@ -68,6 +72,19 @@ describe('App services', function() {
                 var project = Project.get({"projectId": 123});
                 $httpBackend.flush();
                 expect(project.project).toBe('project-1');
+            });
+        });
+        describe('for user', function() {
+            it('should call api/me when get user data', function() {
+                $httpBackend.expect(
+                    "GET",
+                    "{0}/api/me".format([appConfig.backendURL])
+                ).respond(200, {name: 'User Name', email: 'test@user.com', pivotalToken: 'TOKEN'});
+                var user = User.get();
+                $httpBackend.flush();
+                expect(user.name).toBe('User Name');
+                expect(user.email).toBe('test@user.com');
+                expect(user.pivotalToken).toBe('TOKEN');
             });
         });
         describe('for projects', function() {
