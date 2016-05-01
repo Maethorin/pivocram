@@ -35,6 +35,14 @@ class UserTest(base.TestCase):
         user = models.User(name='User Name', email='test@user.com', pivotal_token='TOKEN')
         user.to_dict().should.be.equal({'email': 'test@user.com', 'name': 'User Name', 'pivotal_token': 'TOKEN'})
 
+    @base.TestCase.mock.patch('app.models.User.query')
+    def test_should_get_user_by_id(self, query_mock):
+        query_mock.get.return_value = 'USER-123'
+        user = models.User.get_by_id(123)
+        query_mock.get.assert_called_with(123)
+        user.should.be.equal('USER-123')
+
+
     @base.TestCase.mock.patch('app.models.custom_app_context')
     def test_user_should_hash_password(self, hasher_mock):
         hasher_mock.encrypt.return_value = 'HASSSHED'

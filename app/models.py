@@ -22,6 +22,10 @@ class User(db.Model):
     pivotal_token = db.Column(db.String())
 
     @classmethod
+    def get_by_id(cls, user_id):
+        return cls.query.get(user_id)
+
+    @classmethod
     def create(cls, user_data):
         user = cls()
         db.session.add(user)

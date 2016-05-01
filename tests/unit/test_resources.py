@@ -91,6 +91,23 @@ class UserResourceTest(base.TestCase):
             'email': 'test@user.com',
             'name': 'User Name',
         })
+        user_cls.create.assert_called_with(request_mock.json)
+
+    @base.TestCase.mock.patch('app.resources.g')
+    def test_should_get_user(self, g_mock):
+        user = self.mock.MagicMock()
+        user.to_dict.return_value = {
+            'email': 'test@user.com',
+            'name': 'User Name',
+            'pivotal_token': 'TOKEN'
+        }
+        g_mock.user = user
+        resource = resources.UserResource()
+        resource.get().should.be.equal({
+            'email': 'test@user.com',
+            'name': 'User Name',
+            'pivotal_token': 'TOKEN'
+        })
 
 
 class ProjectsResourceTest(base.TestCase):

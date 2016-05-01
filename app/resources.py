@@ -4,7 +4,7 @@ from functools import wraps
 from flask import request, g, Response
 from flask_restful import Resource
 
-from app import pivocram, config as config_module
+from app import models, pivocram, config as config_module
 
 config = config_module.get_config()
 
@@ -31,7 +31,6 @@ class ResourceBase(Resource):
 class LoginResource(ResourceBase):
     def post(self):
         try:
-            import models
             g.user = models.User.get_by_email(request.json['email'])
             if g.user.check_password(request.json['password']):
                 return {'token': g.user.generate_auth_token(), 'userName': g.user.name}
@@ -42,8 +41,11 @@ class LoginResource(ResourceBase):
 
 class UserResource(ResourceBase):
     @login_required
+    def get(self):
+        return g.user.to_dict()
+
+    @login_required
     def post(self):
-        import models
         return models.User.create(request.json).to_dict()
 
 
