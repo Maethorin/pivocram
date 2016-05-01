@@ -31,8 +31,8 @@ class ResourceBase(Resource):
 class LoginResource(ResourceBase):
     def post(self):
         try:
-            g.user = models.User.get_by_email(request.json['email'])
-            if g.user.check_password(request.json['password']):
+            g.user = models.User.get_by_email(self.payload['email'])
+            if g.user.check_password(self.payload['password']):
                 return {'token': g.user.generate_auth_token(), 'userName': g.user.name}
         except Exception:
             pass
@@ -46,14 +46,20 @@ class UserResource(ResourceBase):
 
     @login_required
     def post(self):
-        return models.User.create(request.json).to_dict()
+        return models.User.create(self.payload).to_dict()
+
+    @login_required
+    def put(self):
+        if self.payload:
+            g.user.update(self.payload)
+        return g.user.to_dict()
 
 
 class StoryResource(ResourceBase):
     @login_required
     def put(self, project_id, story_id):
         client = pivocram.Client(g.user, project_id=project_id)
-        return client.update_story(story_id, request.json)
+        return client.update_story(story_id, self.payload)
 
     @login_required
     def get(self, project_id, story_id=None):
@@ -93,7 +99,7 @@ class TaskResource(ResourceBase):
     @login_required
     def put(self, project_id, story_id, task_id):
         client = pivocram.Client(g.user, project_id=project_id)
-        return client.complete_story_task(story_id, task_id, request.json)
+        return client.complete_story_task(story_id, task_id, self.payload)
 
 
 class ProjectResource(ResourceBase):

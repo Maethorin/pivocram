@@ -109,6 +109,43 @@ class UserResourceTest(base.TestCase):
             'pivotal_token': 'TOKEN'
         })
 
+    @base.TestCase.mock.patch('app.resources.models.db.session', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.resources.request')
+    @base.TestCase.mock.patch('app.resources.g')
+    def test_should_update_user(self, g_mock, request_mock):
+        user = resources.models.User()
+        user.email = 'test@user.com'
+        user.name = 'User Name'
+        user.pivotal_token = 'TOKEN-1'
+        request_mock.json = {
+            'pivotal_token': 'TOKEN-2'
+        }
+        g_mock.user = user
+        resource = resources.UserResource()
+        resource.put().should.be.equal({
+            'email': 'test@user.com',
+            'name': 'User Name',
+            'pivotal_token': 'TOKEN-2'
+        })
+
+    @base.TestCase.mock.patch('app.resources.request')
+    @base.TestCase.mock.patch('app.resources.g')
+    def test_should_not_update_user_if_request_json_is_empty(self, g_mock, request_mock):
+        user = resources.models.User()
+        user.email = 'test@user.com'
+        user.name = 'User Name'
+        user.pivotal_token = 'TOKEN'
+        user.update = self.mock.MagicMock()
+        request_mock.json = {}
+        g_mock.user = user
+        resource = resources.UserResource()
+        resource.put().should.be.equal({
+            'email': 'test@user.com',
+            'name': 'User Name',
+            'pivotal_token': 'TOKEN'
+        })
+        user.update.assert_not_called()
+
 
 class ProjectsResourceTest(base.TestCase):
     @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user='OneUser'))
