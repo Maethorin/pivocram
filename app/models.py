@@ -18,7 +18,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    name = db.Column(db.String(), nullable=False)
+    name = db.Column(db.String())
     pivotal_token = db.Column(db.String())
 
     @classmethod
