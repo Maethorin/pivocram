@@ -22,6 +22,17 @@ class User(db.Model):
     pivotal_token = db.Column(db.String())
 
     @classmethod
+    def create(cls, user_data):
+        user = cls()
+        db.session.add(user)
+        user.name = user_data['name']
+        user.email = user_data['email']
+        user.pivotal_token = user_data['pivotal_token']
+        user.hash_password(user_data['password'])
+        db.session.commit()
+        return user
+
+    @classmethod
     def get_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
 

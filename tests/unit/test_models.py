@@ -7,7 +7,15 @@ from tests import base
 from app import models
 
 
-class ModelsTest(base.TestCase):
+class UserTest(base.TestCase):
+    def setUp(self):
+        self.user_dict = {
+            'email': 'test@user.com',
+            'name': 'User Name',
+            'password': '1234',
+            'pivotal_token': 'TOOKEN'
+        }
+
     def test_user_must_have_tablename(self):
         models.User.__tablename__.should.be.equal('users')
 
@@ -93,3 +101,37 @@ class ModelsTest(base.TestCase):
         decode_mock.side_effect = ValueError
         user = models.User.check_auth_token('SOME-TOKEN')
         user.should.be.none
+
+    @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    def test_should_have_create_user(self):
+        user = models.User.create(self.user_dict)
+        isinstance(user, models.User)
+
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.db.session')
+    def test_should_add_user_indb_session(self, session_mock):
+        user = models.User.create(self.user_dict)
+        session_mock.add.assert_called_with(user)
+
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
+    def test_should_create_user_from_dict(self):
+        user = models.User.create(self.user_dict)
+        user.email.should.be.equal(self.user_dict['email'])
+        user.name.should.be.equal(self.user_dict['name'])
+        user.pivotal_token.should.be.equal(self.user_dict['pivotal_token'])
+
+    @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.custom_app_context')
+    def test_should_hash_passowrd(self, hasher_mock):
+        hasher_mock.encrypt.return_value = 'HASSSHED'
+        user = models.User.create(self.user_dict)
+        user.password_hash.should.be.equal('HASSSHED')
+        hasher_mock.encrypt.assert_called_with('1234')
+
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.db.session')
+    def test_should_commit(self, session_mock):
+        models.User.create(self.user_dict)
+        session_mock.commit.assert_called_with()
