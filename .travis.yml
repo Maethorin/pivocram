@@ -19,5 +19,5 @@ script:
   - ./node_modules/karma/bin/karma start --single-run
 
 after_success:
-  - coveralls-lcov -v -n .k_coverage/lcov.info > coverage.json
+  - coveralls-lcov -v -n .k_coverage/Chrome\ 49.0.2623\ \(Mac\ OS\ X\ 10.11.4\)/lcov.info > coverage.json
   - coveralls --merge=coverage.json
