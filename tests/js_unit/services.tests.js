@@ -1,9 +1,10 @@
 describe('App services', function() {
-    var $httpBackend, $resource, appConfig, Login, User, Project, Story, StoryTask, AuthService;
+    var $httpBackend, $resource, $rootScope, appConfig, Login, User, Project, Story, StoryTask, AuthService;
     beforeEach(module('pivocram'));
-    beforeEach(inject(function(_$httpBackend_, _$resource_, _appConfig_, _Login_, _User_, _Project_, _Story_, _StoryTask_, _AuthService_) {
+    beforeEach(inject(function(_$httpBackend_, _$resource_, _$rootScope_, _appConfig_, _Login_, _User_, _Project_, _Story_, _StoryTask_, _AuthService_) {
         $httpBackend = _$httpBackend_;
         $resource = _$resource_;
+        $rootScope = _$rootScope_;
         appConfig = _appConfig_;
         Login = _Login_;
         User = _User_;
@@ -46,10 +47,29 @@ describe('App services', function() {
             expect(AuthService.token).toBe('TOKEN');
             expect(AuthService.userName).toBe('123');
         });
+        it('should set values in rootScope', function() {
+            AuthService.update('TOKEN', 'User Name');
+            expect($rootScope.userLogged).toBeTruthy();
+            expect($rootScope.userName).toBe('User Name');
+        });
         it('should inform if user is logged based on token in localStorage', function() {
             expect(AuthService.userIsLogged()).toBeFalsy();
             localStorage.setItem('XSRF-TOKEN', 'TOKEN');
             expect(AuthService.userIsLogged()).toBeTruthy();
+        });
+        it('should clear values', function() {
+            AuthService.update('TOKEN', 'User Name');
+            expect(AuthService.userName).toBe('User Name');
+            AuthService.clear();
+            expect(AuthService.userName).toBeNull();
+        });
+        it('should clear $rootScope value', function() {
+            AuthService.update('TOKEN', 'User Name');
+            expect($rootScope.userLogged).toBeTruthy();
+            expect($rootScope.userName).toBe('User Name');
+            AuthService.clear();
+            expect($rootScope.userLogged).toBeFalsy();
+            expect(AuthService.userName).toBeNull();
         });
     });
     describe('resources', function() {

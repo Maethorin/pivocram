@@ -1,6 +1,6 @@
 'use strict';
 angular.module('pivocram.services', [])
-    .service('AuthService', [function() {
+    .service('AuthService', ['$rootScope', function($rootScope) {
         this.token = null;
         this.userName = null;
         this.update = function(token, userName) {
@@ -12,6 +12,8 @@ angular.module('pivocram.services', [])
             }
             this.token = localStorage.getItem('XSRF-TOKEN');
             this.userName = localStorage.getItem('USER-NAME');
+            $rootScope.userLogged = this.userIsLogged();
+            $rootScope.userName = this.userName;
         };
         this.userIsLogged = function() {
             return localStorage.getItem('XSRF-TOKEN') != null;

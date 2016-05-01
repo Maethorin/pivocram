@@ -27,7 +27,9 @@ angular.module('pivocram.login', ['ngRoute'])
             $scope.login.$save().then(
                 function(resp) {
                     AuthService.update(resp.token, resp.userName);
-                    if (!$rootScope.referrer) {
+                    if (!$rootScope.referrer
+                        || $rootScope.referrer.indexOf('login') > -1
+                        || $rootScope.referrer.indexOf('logout') > -1) {
                         $rootScope.referrer = '/'
                     }
                     $location.path($rootScope.referrer);

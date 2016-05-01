@@ -144,22 +144,6 @@ describe('App common', function() {
             updateToken.response(response);
             expect(authSpy).toHaveBeenCalledWith('TOOOOOKEEEN', 'User Name')
         });
-        it('should set $rootScope variables', function() {
-            spyOn(AuthService, 'update');
-            spyOn(AuthService, 'userIsLogged').and.returnValue(true);
-            AuthService.userName = 'User Name';
-            var response = {
-                headers: function() {
-                    return {
-                        'XSRF-TOKEN': 'TOOOOOKEEEN',
-                        'USER-NAME': 'User Name'
-                    }
-                }
-            };
-            updateToken.response(response);
-            expect($rootScope.userLogged).toBeTruthy();
-            expect($rootScope.userName).toBe('User Name')
-        });
         it('should clear AuthService data if response status code is 401', function() {
             var authSpy = spyOn(AuthService, 'clear');
             spyOn($location, 'path').and.returnValue('/login');

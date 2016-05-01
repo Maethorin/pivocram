@@ -67,8 +67,6 @@ angular.module(
                 if (headers['XSRF-TOKEN']) {
                     AuthService.update(headers['XSRF-TOKEN'], headers['USER-NAME'])
                 }
-                $rootScope.userLogged = AuthService.userIsLogged();
-                $rootScope.userName = AuthService.userName;
                 return response;
             },
             responseError: function(response) {

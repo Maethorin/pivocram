@@ -87,6 +87,22 @@ describe('Login module', function() {
             $scope.logingIn();
             expect(spyLocation).toHaveBeenCalledWith('/');
         });
+        it('should redirect to home after success if referrer was login', function() {
+            spyOn(Login, 'save').and.returnValue(loginMock);
+            spyOn(AuthService, 'update');
+            var spyLocation = spyOn($location, 'path');
+            $rootScope.referrer = '/login';
+            $scope.logingIn();
+            expect(spyLocation).toHaveBeenCalledWith('/');
+        });
+        it('should redirect to home after success if referrer was logout', function() {
+            spyOn(Login, 'save').and.returnValue(loginMock);
+            spyOn(AuthService, 'update');
+            var spyLocation = spyOn($location, 'path');
+            $rootScope.referrer = '/logout';
+            $scope.logingIn();
+            expect(spyLocation).toHaveBeenCalledWith('/');
+        });
         it('should redirect to referrer if exists after success', function() {
             spyOn(Login, 'save').and.returnValue(loginMock);
             spyOn(AuthService, 'update');
