@@ -15,7 +15,26 @@ angular.module('pivocram.user', [])
     }])
     .controller("ShowUserController", ['$scope', 'User', function($scope, User) {
         $scope.user = User.get();
+        $scope.updateFail = false;
+        $scope.errorMessage = null;
+        $scope.updateComplete = false;
         $scope.updateUser = function() {
-
+            $scope.updateFail = false;
+            $scope.errorMessage = null;
+            $scope.updateComplete = false;
+            if ($scope.formUser.$invalid) {
+                $scope.updateFail = true;
+                $scope.errorMessage = 'one or more required field missing';
+                return false;
+            }
+            $scope.user.$update().then(
+                function() {
+                    $scope.updateComplete = true;
+                },
+                function(resp) {
+                    $scope.updateFail = true;
+                    $scope.errorMessage = resp.data.errorMessage;
+                }
+            );
         };
     }]);

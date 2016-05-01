@@ -67,6 +67,8 @@ class User(db.Model):
                           config.SECRET_KEY, algorithm='HS256')
 
     def update(self, user_data):
+        if 'name' in user_data:
+            self.name = user_data['name']
         if 'pivotal_token' in user_data:
             self.pivotal_token = user_data['pivotal_token']
         if 'password' in user_data:

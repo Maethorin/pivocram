@@ -26,7 +26,11 @@ angular.module('pivocram.services', [])
         return $resource('{0}/api/login'.format([appConfig.backendURL]));
     }])
     .factory('User', ['$resource', 'appConfig', function($resource, appConfig) {
-        return $resource('{0}/api/me'.format([appConfig.backendURL]));
+        return $resource(
+            '{0}/api/me'.format([appConfig.backendURL]),
+            null,
+            {'update': {method: 'PUT'}}
+        );
     }])
     .factory('Project', ['$resource', 'appConfig', function($resource, appConfig) {
         return $resource('{0}/api/projects/:projectId'.format([appConfig.backendURL]));

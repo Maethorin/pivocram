@@ -164,6 +164,13 @@ class UserTest(base.TestCase):
 
     @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
     @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    def test_should_update_name(self):
+        user = models.User()
+        user.update({'password': '1234', 'pivotal_token': 'NEW-TOKEN', 'name': 'New Name'})
+        user.name.should.be.equal('New Name')
+
+    @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
     def test_should_possible_update_only_password(self):
         user = models.User()
         user.update({'password': '1234'})
@@ -175,6 +182,13 @@ class UserTest(base.TestCase):
         user = models.User()
         user.update({'pivotal_token': 'NEW-TOKEN'})
         user.pivotal_token.should.be.equal('NEW-TOKEN')
+
+    @base.TestCase.mock.patch('app.models.db.session', base.TestCase.mock.MagicMock())
+    @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
+    def test_should_update_only_name(self):
+        user = models.User()
+        user.update({'name': 'New Name'})
+        user.name.should.be.equal('New Name')
 
     @base.TestCase.mock.patch('app.models.custom_app_context', base.TestCase.mock.MagicMock())
     @base.TestCase.mock.patch('app.models.db.session')

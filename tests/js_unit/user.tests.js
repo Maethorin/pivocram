@@ -45,8 +45,73 @@ describe('User module', function() {
             expect($scope.user.name).toBe(user.name);
             expect($scope.user.pivotalToken).toBe(user.pivotalToken);
         });
+        it('should have flag to indicate update failed', function() {
+            expect($scope.updateFail).toBeDefined();
+            expect($scope.updateFail).toBeFalsy();
+        });
+        it('should have errorMessage', function() {
+            expect($scope.errorMessage).toBeDefined();
+        });
+        it('should have flag to indicate update complete', function() {
+            expect($scope.updateComplete).toBeDefined();
+            expect($scope.updateComplete).toBeFalsy();
+        });
         it('should have function to update user', function() {
             expect($scope.updateUser).toBeDefined();
+        });
+    });
+    describe('Updating user', function() {
+        var $scope, user;
+        beforeEach(function() {
+            $scope = $rootScope.$new();
+            $scope.formUser = {
+                $invalid: false
+            };
+            user = {name: 'User Name', pivotalToken: 'PIVOTAL-TOKEN', email: 'user@test.com'};
+            $httpBackend.expect('GET', '{0}/api/me'.format([appConfig.backendURL])).respond(200, user);
+            $controller('ShowUserController', {$scope: $scope})
+        });
+        it('should flag update fail if form is invalid', function() {
+            $scope.formUser.$invalid = true;
+            $scope.updateUser();
+            expect($scope.updateFail).toBeTruthy();
+            expect($scope.errorMessage).toBe('one or more required field missing');
+        });
+        it('should call resource if data is ok', function() {
+            $httpBackend.expect(
+                "PUT",
+                "{0}/api/me".format([appConfig.backendURL]),
+                user
+            ).respond(200, {name: 'Updated User Name', email: 'test2@user.com', pivotalToken: 'TOO-KEN'});
+            $scope.user.email = user.email;
+            $scope.user.name = user.name;
+            $scope.user.pivotalToken = user.pivotalToken;
+            $scope.updateUser();
+            $httpBackend.flush();
+            expect($scope.user.name).toBe('Updated User Name');
+            expect($scope.user.email).toBe('test2@user.com');
+            expect($scope.user.pivotalToken).toBe('TOO-KEN');
+        });
+        it('should flag update is complete', function() {
+            $httpBackend.expect(
+                "PUT",
+                "{0}/api/me".format([appConfig.backendURL]),
+                {}
+            ).respond(200, {name: 'Updated User Name', email: 'test2@user.com', pivotalToken: 'TOO-KEN'});
+            $scope.updateUser();
+            $httpBackend.flush();
+            expect($scope.updateComplete).toBeTruthy();
+        });
+        it('should flag update is failed on error', function() {
+            $httpBackend.expect(
+                "PUT",
+                "{0}/api/me".format([appConfig.backendURL]),
+                {}
+            ).respond(400, {errorMessage: 'Invalid Data'});
+            $scope.updateUser();
+            $httpBackend.flush();
+            expect($scope.updateFail).toBeTruthy();
+            expect($scope.errorMessage).toBe('Invalid Data');
         });
     });
 });

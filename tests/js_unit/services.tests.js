@@ -86,6 +86,19 @@ describe('App services', function() {
                 expect(user.email).toBe('test@user.com');
                 expect(user.pivotalToken).toBe('TOKEN');
             });
+            it('should call api/me with put when updating user data', function() {
+                $httpBackend.expect(
+                    "PUT",
+                    "{0}/api/me".format([appConfig.backendURL]),
+                    {name: 'User Name', pivotalToken: 'TOOKEN', email: 'test@user.com'}
+                ).respond(200, {name: 'User Name', email: 'test@user.com', pivotalToken: 'TOOKEN'});
+                var user = new User({name: 'User Name', pivotalToken: 'TOOKEN', email: 'test@user.com'});
+                user.$update();
+                $httpBackend.flush();
+                expect(user.name).toBe('User Name');
+                expect(user.email).toBe('test@user.com');
+                expect(user.pivotalToken).toBe('TOOKEN');
+            });
         });
         describe('for projects', function() {
             it('should call api/projects when query projects', function() {
