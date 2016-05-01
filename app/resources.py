@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from functools import wraps
+import re
 
 from flask import request, g, Response
 from flask_restful import Resource
@@ -7,6 +8,21 @@ from flask_restful import Resource
 from app import models, pivocram, config as config_module
 
 config = config_module.get_config()
+
+
+def camel_to_snake(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+
+def snake_to_camel(name):
+    result = []
+    for index, part in enumerate(name.split('_')):
+        if index == 0:
+            result.append(part.lower())
+        else:
+            result.append(part.capitalize())
+    return ''.join(result)
 
 
 def login_required(f):
@@ -27,6 +43,9 @@ class ResourceBase(Resource):
     def options(self, *args, **kwargs):
         return {'result': True}
 
+    def response(self, data_dict):
+        return {snake_to_camel(key): value for key, value in data_dict.iteritems()}
+
 
 class LoginResource(ResourceBase):
     def post(self):
@@ -42,17 +61,17 @@ class LoginResource(ResourceBase):
 class UserResource(ResourceBase):
     @login_required
     def get(self):
-        return g.user.to_dict()
+        return self.response(g.user.to_dict())
 
     @login_required
     def post(self):
-        return models.User.create(self.payload).to_dict()
+        return self.response(models.User.create(self.payload).to_dict())
 
     @login_required
     def put(self):
         if self.payload:
             g.user.update(self.payload)
-        return g.user.to_dict()
+        return self.response(g.user.to_dict())
 
 
 class StoryResource(ResourceBase):

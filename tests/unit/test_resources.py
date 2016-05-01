@@ -3,6 +3,20 @@ from tests import base
 from app import resources
 
 
+class CasingTest(base.TestCase):
+    def test_should_convert_camel_to_snake(self):
+        resources.camel_to_snake('getThisSnaked').should.be.equal('get_this_snaked')
+
+    def test_should_convert_snake_to_camel(self):
+        resources.snake_to_camel('get_this_camelled').should.be.equal('getThisCamelled')
+
+    def test_should_convert_snake_upper_to_camel(self):
+        resources.snake_to_camel('GET_THIS_CAMELLED').should.be.equal('getThisCamelled')
+
+    def test_should_convert_pascal_to_snake(self):
+        resources.camel_to_snake('GetThisSnaked').should.be.equal('get_this_snaked')
+
+
 class ResourceBaseTest(base.TestCase):
     @base.TestCase.mock.patch('app.resources.g', base.TestCase.mock.MagicMock(user=None))
     @base.TestCase.mock.patch('app.resources.Response')
@@ -29,6 +43,10 @@ class ResourceBaseTest(base.TestCase):
     def test_should_have_option_respond_true(self):
         base_resource = resources.ResourceBase()
         base_resource.options().should.be.equal({'result': True})
+
+    def test_should_respond_converting_to_camel_casing(self):
+        base_resource = resources.ResourceBase()
+        base_resource.response({'user': 'Zas', 'convert_this': 'Zis'}).should.be.equal({'user': 'Zas', 'convertThis': 'Zis'})
 
 
 class LoginResourceTest(base.TestCase):
@@ -106,7 +124,7 @@ class UserResourceTest(base.TestCase):
         resource.get().should.be.equal({
             'email': 'test@user.com',
             'name': 'User Name',
-            'pivotal_token': 'TOKEN'
+            'pivotalToken': 'TOKEN'
         })
 
     @base.TestCase.mock.patch('app.resources.models.db.session', base.TestCase.mock.MagicMock())
@@ -125,7 +143,7 @@ class UserResourceTest(base.TestCase):
         resource.put().should.be.equal({
             'email': 'test@user.com',
             'name': 'User Name',
-            'pivotal_token': 'TOKEN-2'
+            'pivotalToken': 'TOKEN-2'
         })
 
     @base.TestCase.mock.patch('app.resources.request')
@@ -142,7 +160,7 @@ class UserResourceTest(base.TestCase):
         resource.put().should.be.equal({
             'email': 'test@user.com',
             'name': 'User Name',
-            'pivotal_token': 'TOKEN'
+            'pivotalToken': 'TOKEN'
         })
         user.update.assert_not_called()
 
