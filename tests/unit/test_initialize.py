@@ -4,6 +4,11 @@ from app import initialize
 
 
 class InitializeTest(base.TestCase):
+    @base.TestCase.mock.patch('app.initialize.web_app')
+    def test_should_start_in_debug_mode(self, web_app_mock):
+        initialize.run()
+        web_app_mock.run.assert_called_with(debug=True, host='0.0.0.0', port=5000)
+
     @base.TestCase.mock.patch('app.models.User')
     @base.TestCase.mock.patch('app.initialize.request')
     @base.TestCase.mock.patch('app.initialize.g')
