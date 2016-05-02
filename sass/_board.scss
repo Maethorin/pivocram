@@ -1,8 +1,8 @@
 $graph-part-width: 23px;
 $background-planned: #be0010;
-$background-started: #cd9211;
-$background-finished: #c1b50d;
-$background-delivered: #6eae03;
+$background-started: #C16E00;
+$background-finished: #D7CE00;
+$background-delivered: #0409c1;
 $background-accepted: #4bb207;
 h3 {
     text-align: center;
@@ -32,17 +32,17 @@ h4 {
         line-height: 35px;
         font-size: 12px;
         font-weight: bold;
-        color: #FFF;
+        color: #DDD;
         &.day {
             background-color: #DDD;
             color: #999;
             &.passed {
                 background-color: $background-accepted;
-                color: #FFF;
+                color: #DDD;
             }
             &.is-today {
                 background-color: $background-started;
-                color: #FFF;
+                color: #DDD;
             }
         }
         &.day-1 {
@@ -70,6 +70,7 @@ h4 {
         }
         &.finished {
             background-color: $background-finished;
+            color: #888;
         }
         &.delivered {
             background-color: $background-delivered;
@@ -83,6 +84,7 @@ h4 {
     .panel-heading {
         overflow: hidden;
         .badge {
+            color: #EEE;
             &.badge-planned {
                 background-color: $background-planned;
             }
@@ -91,6 +93,7 @@ h4 {
             }
             &.badge-finished {
                 background-color: $background-finished;
+                color: #666;
             }
             &.badge-delivered {
                 background-color: $background-delivered;
@@ -137,22 +140,22 @@ h4 {
                     float: right;
                 }
                 .badge-0 {
-                    background-color: #4bb207;
+                    background-color: #00d4d6;
                 }
                 .badge-1 {
-                    background-color: #6eae03;
+                    background-color: #00c0c2;
                 }
                 .badge-2 {
-                    background-color: #96aa07;
+                    background-color: #00acae;
                 }
                 .badge-3 {
-                    background-color: #d7cb0d;
+                    background-color: #00989a;
                 }
                 .badge-5 {
-                    background-color: $background-started;
+                    background-color: #008486;
                 }
                 .badge-8 {
-                    background-color: #f2c8a5;
+                    background-color: #007072;
                 }
                 h4 {
                     text-overflow: ellipsis;
