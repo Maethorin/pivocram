@@ -21,7 +21,7 @@ after_success:
 - OUTPUT="$(ls .k_coverage)" && coveralls-lcov -v -n .k_coverage/Chromium\ 37.0.2062\
   \(Ubuntu\ 0.0.0\)/lcov.info > coverage.json
 - coveralls --merge=coverage.json
-deploy:
-  provider: heroku
-  api_key:
-    secure: pxJW+wuB3rwi+koLYDm1EYKiy7Z3UzN2rvtRsBQE4qsgSya0i07nyVXyeXEuhWtyphEXHY29gqcMRj7m5tU52vPkRGVONKkBFDnTtLI1nsB+iMVhXQGTE61ffXr5w5wWy+8+XHooBpt+ZempTp0I5sIDxFv8s/qv/FwrNTrXntnXxVsmkIIdkbwDhQS4mqGgyKsmhe0LGIEgbK2jc7PX1gBDZIG549L9vXbQ0wj6M7jRDVM6mnMVpS/tHj1PkJEBUQzJ9LTgwzmQC2EBkkQgNBDJJdtwcroRKCCASxCOdsHdxv70DOdXQYTystiJII2wfYQg487vri8pCG1GFVZ7qPD70RxYJtdM8+LWeu4ZnpE39pAvcQisM76SnPmnwQvbLdXDTz/pUUlJj/GqYa4JCmB3Y1At/QNHKZMHXAnxW1s6QqrAbBuGTX8Vha49GZ6Us/XrW0ffjTHbbyoTA3B+tbZxUz8eJT049znqncrlLmyU1rb+xI1DI+kudoB8egFOtwbHkAkrw4++0GLQw9j23O+LLDkj8MzaUyC9KAX427qQ2Vm6Vd/KpTSE3he/ky7CcJTD8vvVRiniyZbRKlEbnaDCRI21P2HW33vm5k3yJnz1VGPEOTEZzJ3tvAZsIdVEzOzmuuNMHVeIiCiYFSeUIdOXZ8fRKb+le0T0XGgLXcg=
+#  deploy:
+#    provider: heroku
+#    api_key:
+#      secure: pxJW+wuB3rwi+koLYDm1EYKiy7Z3UzN2rvtRsBQE4qsgSya0i07nyVXyeXEuhWtyphEXHY29gqcMRj7m5tU52vPkRGVONKkBFDnTtLI1nsB+iMVhXQGTE61ffXr5w5wWy+8+XHooBpt+ZempTp0I5sIDxFv8s/qv/FwrNTrXntnXxVsmkIIdkbwDhQS4mqGgyKsmhe0LGIEgbK2jc7PX1gBDZIG549L9vXbQ0wj6M7jRDVM6mnMVpS/tHj1PkJEBUQzJ9LTgwzmQC2EBkkQgNBDJJdtwcroRKCCASxCOdsHdxv70DOdXQYTystiJII2wfYQg487vri8pCG1GFVZ7qPD70RxYJtdM8+LWeu4ZnpE39pAvcQisM76SnPmnwQvbLdXDTz/pUUlJj/GqYa4JCmB3Y1At/QNHKZMHXAnxW1s6QqrAbBuGTX8Vha49GZ6Us/XrW0ffjTHbbyoTA3B+tbZxUz8eJT049znqncrlLmyU1rb+xI1DI+kudoB8egFOtwbHkAkrw4++0GLQw9j23O+LLDkj8MzaUyC9KAX427qQ2Vm6Vd/KpTSE3he/ky7CcJTD8vvVRiniyZbRKlEbnaDCRI21P2HW33vm5k3yJnz1VGPEOTEZzJ3tvAZsIdVEzOzmuuNMHVeIiCiYFSeUIdOXZ8fRKb+le0T0XGgLXcg=
