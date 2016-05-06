@@ -23,6 +23,12 @@ h4 {
         font-weight: bold;
         padding-right: 15px;
     }
+    i {
+        font-size: 25px;
+        vertical-align: middle;
+        color: #666;
+        margin-right: 10px;
+    }
     span {
         display: inline-block;
         width: $graph-part-width;
@@ -37,12 +43,12 @@ h4 {
             background-color: #DDD;
             color: #999;
             &.passed {
-                background-color: $background-accepted;
+                background-color: #999;
                 color: #DDD;
             }
             &.is-today {
-                background-color: $background-started;
-                color: #DDD;
+                background-color: #00ddff;
+                color: #555;
             }
         }
         &.day-1 {

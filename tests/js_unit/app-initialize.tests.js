@@ -13,6 +13,20 @@ describe('General functions', function() {
             expect("String {0} be {1}".format(["to", "formatted"])).toBe("String to be formatted")
         })
     });
+    describe('padding left number', function() {
+        it('should pad with 0', function() {
+            var toBeFormted = 123;
+            expect(toBeFormted.paddingLeft(6)).toBe('000123')
+        });
+        it('should pad with char', function() {
+            var toBeFormted = 13;
+            expect(toBeFormted.paddingLeft(4, '-')).toBe('--13')
+        });
+        it('should do nothing if number length is bigger than padded result', function() {
+            var toBeFormted = 12233;
+            expect(toBeFormted.paddingLeft(4, '-')).toBe('12233')
+        });
+    });
     describe('setBackgroundURL', function() {
         it('should point to heroku by default', function() {
             var location = {hostname: 'anywhere'};

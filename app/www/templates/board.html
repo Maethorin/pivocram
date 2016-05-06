@@ -7,10 +7,10 @@
                 </div>
                 <div class="panel-body">
                     <div class="col-md-12">
-                        <span class="points" ng-class="columnPoint.column" ng-repeat="columnPoint in pointsPerColumn">{{columnPoint.point}}</span>
+                        <i class="fa fa-battery-half fa-2x fa-fw fa-rotate-270"></i><span class="points" ng-class="columnPoint.column" ng-repeat="columnPoint in pointsPerColumn">{{columnPoint.point}}</span>
                     </div>
                     <div class="col-md-12">
-                        <span class="day" ng-style="{'width': devDay.points * 23 + 'px'}" ng-class="{'passed': devDay.passed, 'is-today': devDay.isToday}" ng-repeat="devDay in devDays">{{devDay.day}}</span>
+                        <i class="fa fa-calendar fa-2x fa-fw"></i><span class="day" ng-style="{'width': devDay.points * 23 + 'px'}" ng-class="{'passed': devDay.passed, 'is-today': devDay.isToday}" ng-repeat="devDay in devDays">{{devDay.day}}</span>
                     </div>
                 </div>
             </div>

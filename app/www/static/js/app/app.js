@@ -15,6 +15,21 @@ String.prototype.format = function(data) {
     return format(this, data);
 };
 
+Number.prototype.paddingLeft = function(size, char) {
+    if (!char) {
+        char = '0'
+    }
+    var length = this.toString().length;
+    if (length >= size) {
+        return this.toString();
+    }
+    var result = [];
+    for (var i = length; i < size; i++) {
+        result.push(char);
+    }
+    return result.join('') + this.toString();
+};
+
 function setBackendURL(location) {
     var backendURL = 'https://pivocram.herokuapp.com';
     if (location.hostname == 'localhost' && location.port == '5000') {
