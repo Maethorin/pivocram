@@ -63,7 +63,7 @@ class User(db.Model):
         return custom_app_context.verify(password, self.password_hash)
 
     def generate_auth_token(self, expiration=600):
-        return jwt.encode({'id': self.id, 'exp': datetime.utcnow() + timedelta(seconds=expiration)},
+        return jwt.encode({'id': self.id, 'exp': datetime.utcnow() + timedelta(minutes=expiration)},
                           config.SECRET_KEY, algorithm='HS256')
 
     def update(self, user_data):

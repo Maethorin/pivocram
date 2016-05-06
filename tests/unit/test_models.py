@@ -73,16 +73,16 @@ class UserTest(base.TestCase):
         encode_mock.return_value = 'JWT-ENCODED'
         datetime_mock.utcnow.return_value = datetime(2016, 3, 30, 3, 13, 47, 832051)
         user.generate_auth_token().should.be.equal('JWT-ENCODED')
-        encode_mock.assert_called_with({'id': 'USER-ID', 'exp': datetime(2016, 3, 30, 3, 23, 47, 832051)}, 'SECRET-KEY', algorithm='HS256')
+        encode_mock.assert_called_with({'id': 'USER-ID', 'exp': datetime(2016, 3, 30, 13, 13, 47, 832051)}, 'SECRET-KEY', algorithm='HS256')
 
     @base.TestCase.mock.patch('app.models.datetime')
     @base.TestCase.mock.patch('app.models.jwt.encode')
-    def test_should_accept_expiration_in_seconds_to_generate_token(self, encode_mock, datetime_mock):
+    def test_should_accept_expiration_in_minutes_to_generate_token(self, encode_mock, datetime_mock):
         user = models.User()
         user.id = 'USER-ID'
         encode_mock.return_value = 'JWT-ENCODED'
         datetime_mock.utcnow.return_value = datetime(2016, 3, 30, 3, 13, 47, 832051)
-        user.generate_auth_token(expiration=3600).should.be.equal('JWT-ENCODED')
+        user.generate_auth_token(expiration=60).should.be.equal('JWT-ENCODED')
         encode_mock.assert_called_with({'id': 'USER-ID', 'exp': datetime(2016, 3, 30, 4, 13, 47, 832051)}, 'SECRET-KEY', algorithm='HS256')
 
     @base.TestCase.mock.patch('app.models.jwt.decode')
