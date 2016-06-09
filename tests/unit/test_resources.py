@@ -214,7 +214,9 @@ class StoriesResourceTest(base.TestCase):
                 self.create_mock_story(7, 'unstarted'),
                 self.create_mock_story(8, 'accepted'),
                 self.create_mock_story(9, 'unstarted'),
-                self.create_mock_story(10, story_type='release')
+                self.create_mock_story(10, story_type='release'),
+                self.create_mock_story(11, 'rejected'),
+                self.create_mock_story(12, 'rejected'),
             ]
         }
         resource.get(project_id=1122).should.be.equal({
@@ -225,7 +227,9 @@ class StoriesResourceTest(base.TestCase):
                     self.create_mock_story(1),
                     self.create_mock_story(2),
                     self.create_mock_story(7, 'unstarted'),
-                    self.create_mock_story(9, 'unstarted')
+                    self.create_mock_story(9, 'unstarted'),
+                    self.create_mock_story(11, 'rejected'),
+                    self.create_mock_story(12, 'rejected')
                 ],
                 'started': [
                     self.create_mock_story(3, 'started'),

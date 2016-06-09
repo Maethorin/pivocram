@@ -101,7 +101,7 @@ class StoryResource(ResourceBase):
             if story['story_type'] == 'release':
                 continue
             current_state = story['current_state']
-            if current_state == 'unstarted':
+            if current_state in ['unstarted', 'rejected']:
                 current_state = 'planned'
             iteration['stories'][current_state].append(story)
         return iteration
