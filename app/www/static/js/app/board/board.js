@@ -55,8 +55,10 @@ angular.module('pivocram.board', [])
                     if (estimateKey == 'unstarted') {
                         estimateKey = 'planned'
                     }
-                    totalPoints.push(story.estimate);
-                    $scope.estimates[estimateKey] += story.estimate;
+                    if (story.estimate) {
+                        totalPoints.push(story.estimate);
+                        $scope.estimates[estimateKey] += story.estimate;
+                    }
                     story.hasTasks = ['planned', 'unstarted', 'started'].indexOf(story.current_state) > -1;
                     if (!story.tasks && story.hasTasks) {
                         story.taskLoading = true;

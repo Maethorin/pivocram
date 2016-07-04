@@ -1,5 +1,5 @@
 describe('Board module', function() {
-    var $route, appConfig, $controller, $rootScope, $httpBackend, Project, Story, StoryTask;
+    var $route, appConfig, $controller, $rootScope, $httpBackend, Project, Story, StoryTask, stories;
 
     var qMock = {
         all: function() {
@@ -10,6 +10,27 @@ describe('Board module', function() {
             }
         }
     };
+    function createMockStory(storyId, state, estimate) {
+        if (!state) {
+            state = 'planned';
+        }
+        if (estimate == undefined) {
+            estimate = 2;
+        }
+        var storyMock = {
+            'current_state': state,
+            'description': 'description {0}-{1}'.format([state, storyId]),
+            'id': storyId,
+            'labels': [{'name': 'label-{0}'.format([storyId])}],
+            'name': 'Story {0} Name'.format([storyId]),
+            'owner_ids': [],
+            'url': 'https://www.pivotaltracker.com/story/show/{0}'.format([storyId])
+        };
+        if (estimate > 0) {
+          storyMock['estimate'] = estimate;
+        }
+        return storyMock;
+    }
     beforeEach(module('pivocram'));
     beforeEach(inject(function(_$route_, _appConfig_, _$controller_, _$rootScope_, _$httpBackend_, _Project_, _Story_, _StoryTask_) {
         $route = _$route_;
@@ -20,6 +41,28 @@ describe('Board module', function() {
         Project = _Project_;
         Story = _Story_;
         StoryTask = _StoryTask_;
+        stories = {
+            'planned': [
+                createMockStory(1),
+                createMockStory(2),
+                createMockStory(7, 'unstarted'),
+                createMockStory(9, 'unstarted'),
+                createMockStory(9, 'planned', -1)
+            ],
+            'started': [
+                createMockStory(3, 'started'),
+                createMockStory(4, 'started')
+            ],
+            'finished': [
+                createMockStory(5, 'finished')
+            ],
+            'delivered': [
+                createMockStory(6, 'delivered')
+            ],
+            'accepted': [
+                createMockStory(8, 'accepted')
+            ]
+        };
     }));
     describe('Routes', function() {
         it('should have route to get boards', function() {
@@ -52,24 +95,6 @@ describe('Board module', function() {
     });
     describe('in board page', function() {
         var $scope, spyService, iteration, estimates, pointsPerColumn;
-        function createMockStory(storyId, state, estimate) {
-            if (!state) {
-                state = 'planned';
-            }
-            if (!estimate) {
-                estimate = 2;
-            }
-            return {
-                'current_state': state,
-                'description': 'description {0}-{1}'.format([state, storyId]),
-                'estimate': estimate,
-                'id': storyId,
-                'labels': [{'name': 'label-{0}'.format([storyId])}],
-                'name': 'Story {0} Name'.format([storyId]),
-                'owner_ids': [],
-                'url': 'https://www.pivotaltracker.com/story/show/{0}'.format([storyId])
-            }
-        }
         beforeEach(function() {
             $scope = $rootScope.$new();
             estimates = {
@@ -103,27 +128,7 @@ describe('Board module', function() {
             iteration = {
                 'start': '2016-04-24blablabla',
                 'finish': '2016-05-09blablabla',
-                'stories': {
-                    'planned': [
-                        createMockStory(1),
-                        createMockStory(2),
-                        createMockStory(7, 'unstarted'),
-                        createMockStory(9, 'unstarted')
-                    ],
-                    'started': [
-                        createMockStory(3, 'started'),
-                        createMockStory(4, 'started')
-                    ],
-                    'finished': [
-                        createMockStory(5, 'finished')
-                    ],
-                    'delivered': [
-                        createMockStory(6, 'delivered')
-                    ],
-                    'accepted': [
-                        createMockStory(8, 'accepted')
-                    ]
-                }
+                'stories': stories
             };
             spyService = spyOn(Story, 'currents');
             spyService.and.returnValue(iteration);
@@ -285,34 +290,15 @@ describe('Board module', function() {
             it('should update column estimates', function() {
                 $scope.updateStoryData();
                 expect($scope.estimates).toEqual(estimates);
-                $scope.stories = {
-                    'planned': [
-                        createMockStory(1),
-                        createMockStory(2),
-                        createMockStory(7, 'unstarted'),
-                        createMockStory(9, 'unstarted')
-                    ],
-                    'started': [
-                        createMockStory(3, 'started'),
-                        createMockStory(4, 'started')
-                    ],
-                    'finished': [
-                        createMockStory(5, 'finished'),
-                        createMockStory(6, 'finished')
-                    ],
-                    'delivered': [
-                    ],
-                    'accepted': [
-                        createMockStory(7, 'accepted'),
-                        createMockStory(8, 'accepted')
-                    ]
-                };
+                stories.delivered = [];
+                stories.accepted.push(createMockStory(7, 'accepted'));
+                $scope.stories = stories;
                 $scope.dropStory();
                 expect($scope.estimates).toEqual({
                     planned: 8,
                     unstarted: 0,
                     started: 4,
-                    finished: 4,
+                    finished: 2,
                     delivered: 0,
                     accepted: 4
                 });
@@ -320,28 +306,9 @@ describe('Board module', function() {
             it('should update points', function() {
                 $scope.updateStoryData();
                 expect($scope.pointsPerColumn).toEqual(pointsPerColumn);
-                $scope.stories = {
-                    'planned': [
-                        createMockStory(1),
-                        createMockStory(2),
-                        createMockStory(7, 'unstarted'),
-                        createMockStory(9, 'unstarted')
-                    ],
-                    'started': [
-                        createMockStory(3, 'started'),
-                        createMockStory(4, 'started')
-                    ],
-                    'finished': [
-                        createMockStory(5, 'finished'),
-                        createMockStory(6, 'finished')
-                    ],
-                    'delivered': [
-                    ],
-                    'accepted': [
-                        createMockStory(7, 'accepted'),
-                        createMockStory(8, 'accepted')
-                    ]
-                };
+                stories.delivered = [];
+                stories.accepted.push(createMockStory(7, 'accepted'));
+                $scope.stories = stories;
                 $scope.dropStory();
                 expect($scope.pointsPerColumn).toEqual([
                     { column: 'accepted', point: 1 },
@@ -350,20 +317,18 @@ describe('Board module', function() {
                     { column: 'accepted', point: 4 },
                     { column: 'finished', point: 5 },
                     { column: 'finished', point: 6 },
-                    { column: 'finished', point: 7 },
-                    { column: 'finished', point: 8 },
+                    { column: 'started', point: 7 },
+                    { column: 'started', point: 8 },
                     { column: 'started', point: 9 },
                     { column: 'started', point: 10 },
-                    { column: 'started', point: 11 },
-                    { column: 'started', point: 12 },
+                    { column: 'planned', point: 11 },
+                    { column: 'planned', point: 12 },
                     { column: 'planned', point: 13 },
                     { column: 'planned', point: 14 },
                     { column: 'planned', point: 15 },
                     { column: 'planned', point: 16 },
                     { column: 'planned', point: 17 },
-                    { column: 'planned', point: 18 },
-                    { column: 'planned', point: 19 },
-                    { column: 'planned', point: 20 }
+                    { column: 'planned', point: 18 }
                 ]);
             })
         });
