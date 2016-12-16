@@ -12,6 +12,9 @@ class Connect(object):
     def projects_url(self, project_id=None):
         return '{}/projects{}'.format(self.PIVOTAL_URL, '/{}'.format(project_id) if project_id else '')
 
+    def account_member_url(self, account_id, member_id):
+        return '{}/accounts/{}/memberships/{}'.format(self.PIVOTAL_URL, account_id, member_id)
+
     def iterations_url(self, project_id, iteration_id):
         return '{}/iterations/{}'.format(self.projects_url(project_id), iteration_id)
 
@@ -36,6 +39,10 @@ class Connect(object):
 
     def get_project(self, project_id):
         url = self.projects_url(project_id)
+        return self.get(url)
+
+    def get_account_member(self, account_id, member_id):
+        url = self.account_member_url(account_id, member_id)
         return self.get(url)
 
     def get_current_iteration(self, project_id, iteration_id):
@@ -66,6 +73,9 @@ class Client(object):
     def get_projects(self):
         projects = self.connect.get_projects()
         return projects if projects else []
+
+    def get_account_member(self, account_id, member_id):
+        return self.connect.get_account_member(account_id, member_id)
 
     @property
     def current_iteration_number(self):

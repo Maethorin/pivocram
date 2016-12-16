@@ -117,6 +117,9 @@ h4 {
                 background-color: #EEE;
             }
             .panel-footer {
+                .label {
+                    margin-right: 2px;
+                }
                 .story-type {
                     display: inline-block;
                     width: 16px;
@@ -142,6 +145,7 @@ h4 {
             .panel-heading {
                 cursor: move;
                 padding: 5px;
+                background-color: #EFEFEF;
                 .badge {
                     float: right;
                 }
@@ -164,9 +168,6 @@ h4 {
                     background-color: #007072;
                 }
                 h4 {
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    overflow: hidden;
                 }
             }
             .panel-body {

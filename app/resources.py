@@ -126,3 +126,10 @@ class ProjectResource(ResourceBase):
     def get(self):
         client = pivocram.Client(g.user)
         return client.get_projects()
+
+
+class AccountMembersResource(ResourceBase):
+    @login_required
+    def get(self, account_id, member_id):
+        client = pivocram.Client(g.user)
+        return client.get_account_member(account_id, member_id)
