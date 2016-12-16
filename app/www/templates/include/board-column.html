@@ -24,10 +24,6 @@
                     <div class="loading" ng-show="story.taskLoading">
                         <i class="fa fa-spinner fa-pulse"></i>
                     </div>
-
-                    {{ story }}
-
-
                     <ul class="list-group" ng-init="story.getTasks()">
                         <li class="list-group-item" ng-class="{'list-group-item-success': task.complete, 'list-group-item-warning': !task.complete, }" ng-repeat="task in story.tasks">
                             <i class="fa fa-fw" ng-if="column.name == 'started'" ng-click="changeTaskStatus(task, story.id)" ng-class="{'fa-square-o': !task.complete, 'fa-spinner fa-pulse': task.changing, 'fa-check-square-o': task.complete}"></i>
